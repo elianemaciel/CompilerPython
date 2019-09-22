@@ -50,7 +50,7 @@ class AnaliserLexer(object):
         'MENOREQUALS', 'MAIOREQUALS', 'SUMEQUALS',
         'MINUSEQUALS', 'TIMESEQUALS', 'DIVIDEEQUALS', 'MOD'
     ] + list(RESERVED.values())
- 
+    
     # Regular expression rules for simple tokens
     t_PLUS = r'\+'
     t_MINUS = r'-'
@@ -80,13 +80,11 @@ class AnaliserLexer(object):
     t_MINUSEQUALS = r'-='
     t_TIMESEQUALS  = r'\*='
     t_DIVIDEEQUALS = r'/='
-    t_MOD = r'%='
-    t_PLUS = r'\+'
-    t_MINUS = r'-'
-    t_TIMES = r'\*'
-    t_DIVIDE = r'/'
     t_ASSIGN = r'='
- 
+    
+    def __init__(self):
+        self.lexer = None
+
     def t_NUMBER(self,t):
         r'\d+'
         t.value = int(t.value)    
