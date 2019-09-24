@@ -1,4 +1,5 @@
 import ply.lex as lex
+import copy
 
 
 RESERVED = {
@@ -40,6 +41,7 @@ RESERVED = {
     'yield': 'YIELD'
 }
 
+
 class AnaliserLexer(object):
     tokens = [
         'NAME', 'NUMBER', 'NORMALSTRING', 'PLUS', 'MINUS',
@@ -48,9 +50,10 @@ class AnaliserLexer(object):
         'SEMICOLON', 'EXPLAMATION', 'INTERROGATION',
         'COLON', 'EQUALS', 'DIFF', 'MENOR', 'MAIOR',
         'MENOREQUALS', 'MAIOREQUALS', 'SUMEQUALS',
-        'MINUSEQUALS', 'TIMESEQUALS', 'DIVIDEEQUALS', 'MOD'
+        'MINUSEQUALS', 'TIMESEQUALS', 'DIVIDEEQUALS', 'MOD',
+        'WHITESPACE'
     ] + list(RESERVED.values())
-    
+
     # Regular expression rules for simple tokens
     t_PLUS = r'\+'
     t_MINUS = r'-'
@@ -78,37 +81,43 @@ class AnaliserLexer(object):
     t_MAIOREQUALS = r'>='
     t_SUMEQUALS = r'\+='
     t_MINUSEQUALS = r'-='
-    t_TIMESEQUALS  = r'\*='
+    t_TIMESEQUALS = r'\*='
     t_DIVIDEEQUALS = r'/='
     t_ASSIGN = r'='
-    
+    t_WHITESPACE = r'\n[ ]*'
+
     def __init__(self):
         self.lexer = None
+        self.indents = [0]  # indentation stack
+        # self.tokens = []    # token queue
 
-    def t_NUMBER(self,t):
+    def input(self, *args, **kwds):
+        self.lexer.input(*args, **kwds)
+
+    def t_NUMBER(self, t):
         r'\d+'
-        t.value = int(t.value)    
+        t.value = int(t.value)
         return t
- 
-    def t_newline(self,t):
+
+    def t_newline(self, t):
         r'\n+'
         t.lexer.lineno += len(t.value)
 
     # Error handling rule
-    def t_error(self,t):
+    def t_error(self, t):
         print("Illegal character '%s'" % t.value[0])
         t.lexer.skip(1)
-    
+
     def t_NAME(self, t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
-        if t.value in RESERVED:# Check for reserved words
+        if t.value in RESERVED:  # Check for reserved words
             t.type = RESERVED[t.value]
         return t
 
     def t_NORMALSTRING(self, t):
-	    r'\"([^\\\n]|(\\.))*?\"'
-        #	print(t)
-	    return t
+        r'\"([^\\\n]|(\\.))*?\"'
+        # print(t)
+        return t
 
     def t_COMMENT_MONOLINE(self, t):
         r'//.*'
@@ -118,15 +127,62 @@ class AnaliserLexer(object):
         r'(/\*(.|\n)*?\*/)|(//.*)'
         pass
 
+    def calc_indent(self, whitespace):
+        "returns a number representing indents added or removed"
+        n = len(whitespace)  # number of spaces
+        indents = self.indents  # stack of space numbers
+        if n > indents[-1]:
+            indents.append(n)
+            return 1
+
+        # we are at the same level
+        if n == indents[-1]:
+            return 0
+
+        # dedent one or more times
+        i = 0
+        while n < indents[-1]:
+            indents.pop()
+            if n > indents[-1]:
+                raise SyntaxError("wrong indentation level")
+            i -= 1
+        return i
+
     # Build the lexer
-    def build(self,**kwargs):
+    def build(self, **kwargs):
         self.lexer = lex.lex(module=self, **kwargs)
-     
-    # Test it output
-    def test(self,data):
+
+    def run(self, data):
         self.lexer.input(data)
+        import ipdb; ipdb.set_trace()
         while True:
-            tok = self.lexer.token()
-            if not tok: 
+            token = self.lexer.token()
+
+            if not token:
                 break
-            print(tok)
+            print(token)
+
+            if token.type == 'WHITESPACE':
+                # check for new indent/dedent
+                whitespace = token.value[1:]  # strip \n
+                change = self.calc_indent(whitespace)
+                if change:
+                    break
+                # if not token:
+                #     break
+                # print(token)
+
+                # indentation change
+                if change == 1:
+                    token.type = 'INDENT'
+                    return token
+
+                # dedenting one or more times
+                assert change < 0
+                change += 1
+                token.type = 'DEDENT'
+
+                # buffer any additional DEDENTs
+                while change:
+                    self.tokens.append(copy.copy(token))
+                    change += 1
