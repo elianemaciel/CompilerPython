@@ -1,4 +1,4 @@
-import ply.lex as lex
+from ply import lex
 import copy
 
 
@@ -43,6 +43,7 @@ RESERVED = {
 
 
 class AnaliserLexer(object):
+
     tokens = [
         'NAME', 'NUMBER', 'NORMALSTRING', 'PLUS', 'MINUS',
         'TIMES', 'DIVIDE', 'ASSIGN', 'RPAREN', 'LPAREN',
@@ -54,12 +55,10 @@ class AnaliserLexer(object):
         'WHITESPACE'
     ] + list(RESERVED.values())
 
-    # Regular expression rules for simple tokens
     t_PLUS = r'\+'
     t_MINUS = r'-'
     t_TIMES = r'\*'
     t_DIVIDE = r'/'
-    t_ignore = ' \t'
     t_RPAREN = r'\)'
     t_LPAREN = r'\('
     t_RCOLC = r'\]'
@@ -67,10 +66,6 @@ class AnaliserLexer(object):
     t_RBRACE = r'\}'
     t_LBRACE = r'\{'
     t_COMMA = r','
-    t_SEMICOLON = r';'
-    t_OR = r'\|\|'
-    t_AND = r'&&'
-    t_EXPLAMATION = r'!'
     t_INTERROGATION = r'\?'
     t_COLON = r':'
     t_EQUALS = r'=='
@@ -84,15 +79,8 @@ class AnaliserLexer(object):
     t_TIMESEQUALS = r'\*='
     t_DIVIDEEQUALS = r'/='
     t_ASSIGN = r'='
-    t_WHITESPACE = r'\n[ ]*'
-
-    def __init__(self):
-        self.lexer = None
-        self.indents = [0]  # indentation stack
-        # self.tokens = []    # token queue
-
-    def input(self, *args, **kwds):
-        self.lexer.input(*args, **kwds)
+    t_WHITESPACE = r'\s\s+'
+    t_ignore = r'[\s]*\n'
 
     def t_NUMBER(self, t):
         r'\d+'
@@ -119,13 +107,73 @@ class AnaliserLexer(object):
         # print(t)
         return t
 
-    def t_COMMENT_MONOLINE(self, t):
-        r'//.*'
+    def t_COMMENT(self, t):
+        r'\#.*'
         pass
 
     def t_ccode_comment(self,   t):
         r'(/\*(.|\n)*?\*/)|(//.*)'
         pass
+
+    # Regular expression rules for simple tokens
+
+    def __init__(self, **kwargs):
+
+        self.lexer = None
+        self.indents = [0]  # indentation stack
+        self.tokens_result = []    # token queue
+        self.tokens_result_str = []    # token queue
+
+    def input(self, *args, **kwds):
+        self.lexer.input(*args, **kwds)
+
+    def build(self, **kwargs):
+        self.lexer = lex.lex(module=self, **kwargs)
+
+    def transform_tokens(self):
+
+        for token in self.tokens_result:
+            self.tokens_result_str.append(
+                "{0}, {1}, {2}, {3}".format(
+                    token.type,
+                    token.lineno,
+                    token.value,
+                    token.lexpos
+                )
+            )
+
+    def token(self):
+        # loop until we find a valid token
+        while 1:
+            change = None
+            # grab the next from first stage
+            token = self.lexer.token()
+            if token:
+                self.tokens_result.append(token)
+                print(token)
+            # we only care about whitespace
+            if token and token.type != 'WHITESPACE':
+                continue
+
+            if not token:
+                break
+
+            # check for new indent/dedent
+            whitespace = token.value
+            change = self.calc_indent(whitespace)
+
+            if change == 1:
+                token.type = 'INDENT'
+
+            if change < 0:
+                # dedenting one or more times
+                change += 1
+                token.type = 'DEDENT'
+
+                # buffer any additional DEDENTs
+                while change:
+                    self.tokens.append(copy.copy(token))
+                    change += 1
 
     def calc_indent(self, whitespace):
         "returns a number representing indents added or removed"
@@ -147,42 +195,3 @@ class AnaliserLexer(object):
                 raise SyntaxError("wrong indentation level")
             i -= 1
         return i
-
-    # Build the lexer
-    def build(self, **kwargs):
-        self.lexer = lex.lex(module=self, **kwargs)
-
-    def run(self, data):
-        self.lexer.input(data)
-        import ipdb; ipdb.set_trace()
-        while True:
-            token = self.lexer.token()
-
-            if not token:
-                break
-            print(token)
-
-            if token.type == 'WHITESPACE':
-                # check for new indent/dedent
-                whitespace = token.value[1:]  # strip \n
-                change = self.calc_indent(whitespace)
-                if change:
-                    break
-                # if not token:
-                #     break
-                # print(token)
-
-                # indentation change
-                if change == 1:
-                    token.type = 'INDENT'
-                    return token
-
-                # dedenting one or more times
-                assert change < 0
-                change += 1
-                token.type = 'DEDENT'
-
-                # buffer any additional DEDENTs
-                while change:
-                    self.tokens.append(copy.copy(token))
-                    change += 1
