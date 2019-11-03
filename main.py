@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 # Autor 1: Eliane Isadora Faveron Maciel
 # Autora 2: Guilherme Menin Stedile
 

@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 import ply.lex as lex
 import copy
 
