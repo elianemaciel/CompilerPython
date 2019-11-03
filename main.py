@@ -2,15 +2,21 @@
 
 # Autor 1: Eliane Isadora Faveron Maciel
 # Autora 2: Guilherme Menin Stedile
-
+from ply import lex, yacc
 from analisador_lexico import AnaliserLexer
 
 
 if __name__ == '__main__':
     file = open("fonte.txt", "r")
-    m = AnaliserLexer()
-    m.build()           # Build the lexer
+    lexer = AnaliserLexer()
+    lexer.build()
     for line in file:
-        print(m.run(line))
+        lexer.lexer.input(line)
+        print(lexer.token())
 
+    file.close()
+
+    lexer.transform_tokens()
+    file = open("Saida.txt", "w")
+    file.write("\n".join(lexer.tokens_result_str))
     file.close()
