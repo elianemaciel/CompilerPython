@@ -100,8 +100,7 @@ def p_assign(p):
                   |   variavel SUMEQUALS expression
                   |   variavel MINUSEQUALS expression
                   |   variavel TIMESEQUALS expression
-                  |   variavel DIVIDEEQUALS expression
-    '''
+                  |   variavel DIVIDEEQUALS expression'''
 
     # if p[2] == '=':
     #     p[0] = Variavel(p[1], p[3])
