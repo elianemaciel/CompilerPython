@@ -63,6 +63,17 @@ def p_expression_logop(p):
     else:
         sinal_desconhecido(p)
 
+def p_expression_delimiters(p):
+    '''expression : LPAREN expression RPAREN
+                  | LCOLC expression RCOLC
+                  | LBRACE expression RBRACE'''
+    if (p[1] == '(') and (p[3]==')'):
+        p[0] = ( p[2] )
+    elif (p[1] == '[') and (p[3]==']'):
+        p[0] = [ p[2] ]
+    elif (p[1] == '{') and (p[3]=='}'):
+        p[0] = { p[2] }
+   
 
 def p_var_especification(p):
     '''var_Especification   : NAME LCOLC NUMBER RCOLC
