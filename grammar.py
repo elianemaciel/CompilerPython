@@ -20,9 +20,8 @@ precedence = (
 
 
 # Definição
-def p_empty(p):
-    'empty :'
-    pass
+def p_pass(p):
+    'empty : PASS'
 
 
 def p_literal(t):
@@ -171,6 +170,22 @@ def p_statement_while(p):
 def p_statement_return(p):
     '''return_statement : RETURN
                         | RETURN variavel'''
+
+
+def p_statement_break(p):
+    '''break_statement : BREAK'''
+
+
+def p_statement_def(p):
+    '''def_statement : DEF expression COLON block'''
+
+
+def p_statement_class(p):
+    '''class_statement : CLASS expression COLON block'''
+
+
+def p_statement_continue(p):
+    '''continue_statement : CONTINUE'''
 
 
 def p_expression(p):
