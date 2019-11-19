@@ -4,19 +4,25 @@
 # Autora 2: Guilherme Menin Stedile
 from ply import lex, yacc
 from analisador_lexico import AnaliserLexer
+from grammar import *
 
 
 if __name__ == '__main__':
-    file = open("fonte.txt", "r")
+    file_open = open("fonte.txt", "r")
     lexer = AnaliserLexer()
     lexer.build()
-    for line in file:
+    tokens = lexer.tokens
+    parser = yacc.yacc()
+    for line in file_open:
         lexer.lexer.input(line)
         print(lexer.token())
 
-    file.close()
+    result = parser.parse(file_open.read(), lexer=lexer)
+    print(result)
+
+    file_open.close()
 
     lexer.transform_tokens()
-    file = open("Saida.txt", "w")
-    file.write("\n".join(lexer.tokens_result_str))
-    file.close()
+    file_open = open("Saida.txt", "w")
+    file_open.write("\n".join(lexer.tokens_result_str))
+    file_open.close()

@@ -3,42 +3,29 @@ import copy
 
 
 RESERVED = {
-    'bool': 'BOOL',
     'break': 'BREAK',
     'for': 'FOR',
-    'false': 'FALSE',
+    'False': 'FALSE',
     'if': 'IF',
     'elif': 'ELIF',
     'else': 'ELSE',
-    'int': 'INT',
     'return': 'RETURN',
-    'string': 'STRING',
-    'true': 'TRUE',
+    'True': 'TRUE',
     'while': 'WHILE',
-    'write': 'WRITE',
-    'read': 'READ',
     'pass': 'PASS',
     'def': 'DEF',
     'class': 'CLASS',
-    'none': 'NONE',
+    'None': 'NONE',
     'and': 'AND',
     'as': 'AS',
     'continue': 'CONTINUE',
-    'del': 'DEL',
-    'except': 'EXCEPT',
-    'finally': 'FINALLY',
     'from': 'FROM',
     'global': 'GLOBAL',
     'import': 'IMPORT',
     'in': 'IN',
     'is': 'IS',
-    'lambda': 'LAMBDA',
     'not': 'NOT',
     'or': 'OR',
-    'raise': 'RAISE',
-    'try': 'TRY',
-    'with': 'WITH',
-    'yield': 'YIELD'
 }
 
 
@@ -48,10 +35,10 @@ class AnaliserLexer(object):
         'NAME', 'NUMBER', 'NORMALSTRING', 'PLUS', 'MINUS',
         'TIMES', 'DIVIDE', 'ASSIGN', 'RPAREN', 'LPAREN',
         'RCOLC', 'LCOLC', 'RBRACE', 'LBRACE', 'COMMA',
-        'SEMICOLON', 'EXPLAMATION', 'INTERROGATION',
+        'SEMICOLON', 'EXPLAMATION',
         'COLON', 'EQUALS', 'DIFF', 'MENOR', 'MAIOR',
         'MENOREQUALS', 'MAIOREQUALS', 'SUMEQUALS',
-        'MINUSEQUALS', 'TIMESEQUALS', 'DIVIDEEQUALS', 'MOD',
+        'MINUSEQUALS', 'TIMESEQUALS', 'DIVIDEEQUALS',
         'WHITESPACE'
     ] + list(RESERVED.values())
 
@@ -66,7 +53,6 @@ class AnaliserLexer(object):
     t_RBRACE = r'\}'
     t_LBRACE = r'\{'
     t_COMMA = r','
-    t_INTERROGATION = r'\?'
     t_COLON = r':'
     t_EQUALS = r'=='
     t_DIFF = r'!='

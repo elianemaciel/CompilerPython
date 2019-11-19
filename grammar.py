@@ -5,7 +5,7 @@ from exceptions_errors import sintaxe_erro, sinal_desconhecido
 from Variavel import Variavel
 from Declaracao import Declaracao
 from Bloco import Bloco
-# from mylexer import tokens
+from analisador_lexico import AnaliserLexer
 
 
 precedence = (
@@ -14,15 +14,43 @@ precedence = (
     ('left', 'MAIOR', 'MENOR', 'MAIOREQUALS', 'MENOREQUALS', 'EQUALS', 'DIFF'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
-    ('right', 'UMINUS', 'NOT', 'TERNARY'),
+    ('left', 'IF', 'ELSE'),
+    ('right', 'NOT'),
 )
 
 
+# Definição
+def p_empty(p):
+    'empty :'
+    pass
+
+
+def p_literal(t):
+    '''literal : NUMBER
+               | TRUE
+               | FALSE
+               | NORMALSTRING
+    '''
+    t[0] = t[1]
+
+
+def p_sequence_literal(t):
+    '''sequence_literal : literal COMMA sequence_literal
+                        | literal'''
+
+
+def p_variavel(t):
+    '''variavel : NAME
+                | NAME LCOLC expression RCOLC'''
+    t[0] = t[1]
+
+
 def p_binary_operators(p):
-    '''expression : expression PLUS term
-                   | expression MINUS term
-        term       : term TIMES factor
-                   | term DIVIDE factor'''
+    '''expression : expression PLUS expression
+                  | expression MINUS expression
+       literal    : literal TIMES literal
+                  | literal DIVIDE literal
+    '''
     if p[2] == '+':
         p[0] = p[1] + p[3]
     elif p[2] == '-':
@@ -33,6 +61,22 @@ def p_binary_operators(p):
         p[0] = p[1] / p[3]
     else:
         sinal_desconhecido(p)
+
+
+def p_operators(p):
+    ''' expression : SUMEQUALS expression
+                   | MINUSEQUALS expression
+                   | TIMESEQUALS expression
+                   | DIVIDEEQUALS expression'''
+
+    if p[1] == '+=':
+        p[0] += p[2]
+    elif p[1] == '-=':
+        p[0] -= p[2]
+    elif p[1] == '*=':
+        p[0] *= p[2]
+    elif p[1] == '/=':
+        p[0] /= p[2]
 
 
 def p_expression_logop(p):
@@ -63,32 +107,70 @@ def p_expression_logop(p):
     else:
         sinal_desconhecido(p)
 
-def p_expression_delimiters(p):
-    '''expression : LPAREN expression RPAREN
-                  | LCOLC expression RCOLC
-                  | LBRACE expression RBRACE'''
-    if (p[1] == '(') and (p[3]==')'):
-        p[0] = ( p[2] )
-    elif (p[1] == '[') and (p[3]==']'):
-        p[0] = [ p[2] ]
-    elif (p[1] == '{') and (p[3]=='}'):
-        p[0] = { p[2] }
-   
 
-def p_var_especification(p):
+def p_var_Especification(p):
     '''var_Especification   : NAME LCOLC NUMBER RCOLC
                             | NAME ASSIGN expression
                             | NAME
-                            | NAME LCOLC NUMBER RCOLC ASSIGN LBRACE sequence_literal RBRACE'''
+                            | NAME LCOLC NUMBER RCOLC ASSIGN LBRACE  RBRACE'''
     if len(p) == 2:
         p[0] = Variavel(p[1], None)
     elif len(p) == 4:
         p[0] = Variavel(p[1], p[3])
 
 
-def p_expression_not(p):
-    'expression : EXPLAMATION expression %prec NOT'
-    p[0] = not p[2]
+def p_define_expression_literal(t):
+    'expression : literal'
+    t[0] = t[1]
+
+
+# statements
+def p_statement(t):
+    '''statement    : for_statement
+    '''
+    t[0] = t[1]
+
+#  # | break_statement
+#                 | return_statement
+#                 | assignment end
+#                 | subCall_statement end
+#                 | write_statement end
+#                 | read_statement end
+
+
+def p_list_statement(t):
+    '''list_statement : statement list_statement
+                        | empty'''
+
+
+# block
+def p_block(t):
+    '''block : list_statement'''
+    t[0] = [t[1], t[2]]
+
+
+def p_statement_for(t):
+    'for_statement  : FOR expression COLON block'
+
+
+def p_statement_if(t):
+    '''if_statement : IF expression COLON block
+                    | IF expression COLON block ELSE COLON block
+                    | IF expression COLON block ELIF COLON block ELSE COLON block
+                    | IF expression COLON block ELIF expression COLON block'''
+    if t[3]:
+        t[0] = t[6]
+    elif len(t) > 10:  # with else
+        t[0] = t[10]
+
+
+def p_statement_while(p):
+    'while_statement : WHILE expression COLON block'
+
+
+def p_statement_return(p):
+    '''return_statement : RETURN
+                        | RETURN variavel'''
 
 
 def p_expression(p):
@@ -96,50 +178,6 @@ def p_expression(p):
     p[0] = p[2]
 
 
-def p_sequence_expression(p):
-    '''sequence_expression : expression COMMA sequence_expression
-                            | expression'''
-    if len(p) > 2:
-        p[0] = [p[1]] + p[3]
-    else:
-        [p[1]]
-
-
-def p_assign(p):
-    '''assignment :   variavel ASSIGN expression
-                  |   variavel MOD expression
-                  |   variavel SUMEQUALS expression
-                  |   variavel MINUSEQUALS expression
-                  |   variavel TIMESEQUALS expression
-                  |   variavel DIVIDEEQUALS expression'''
-
-    # if p[2] == '=':
-    #     p[0] = Variavel(p[1], p[3])
-    # elif p[2] == '%=':
-    #     (p[1], var_global.show(p[1]) /p[3])
-    # elif p[2] == '+=':
-    #     var_global.change(p[1], var_global.show(p[1]) +p[3])
-    # elif p[2] == '-=':
-    #     var_global.change(p[1], var_global.show(p[1])-p[3])
-    # elif p[2] == '*=':
-    #     var_global.change(p[1], var_global.show(p[1]) *p[3])
-    # elif p[2] == '/=':
-    #     var_global.change(p[1], var_global.show(p[1])/p[3])
-    # else:
-    #     errors.unknownSignal(t)
-    # p[0]=var_global.show(p[1])
-
-
-# Build the parser
-parser = yacc.yacc()
-
-
-while True:
-    try:
-        s = input('calc > ')
-    except EOFError:
-        break
-    if not s:
-        continue
-    result = parser.parse(s)
-    print(result)
+# Error rule for syntax errors
+def p_error(p):
+    print("Syntax error in input!")
