@@ -9,16 +9,17 @@ from grammar import *
 
 if __name__ == '__main__':
     file_open = open("fonte.txt", "r")
+    lines = file_open.readlines()
     lexer = AnaliserLexer()
     lexer.build()
     tokens = lexer.tokens
-    parser = yacc.yacc()
-    for line in file_open:
+    parser = yacc.yacc(debug=True)
+    for line in lines:
         lexer.lexer.input(line)
         print(lexer.token())
 
-        result = parser.parse(file_open.read(), lexer=lexer)
-        print(result)
+    result = parser.parse(file_open.read(), lexer=lexer, debug=True)
+    print(result)
 
     file_open.close()
 

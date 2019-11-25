@@ -142,6 +142,12 @@ def p_list_statement(t):
                         | empty'''
 
 
+def p_statement_eof(p):
+    '''eof_statement : expression EOF'''
+
+    print("parsed:", p)
+
+
 # block
 def p_block(t):
     '''block : list_statement'''
@@ -195,4 +201,10 @@ def p_expression(p):
 
 # Error rule for syntax errors
 def p_error(p):
-    print("Syntax error in input!")
+    if p:
+        print("Syntax error at token", p.type)
+        # Just discard the token and tell the parser it's okay.
+        parser.errok()
+    else:
+        print("Syntax error at EOF")
+

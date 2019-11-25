@@ -39,7 +39,7 @@ class AnaliserLexer(object):
         'COLON', 'EQUALS', 'DIFF', 'MENOR', 'MAIOR',
         'MENOREQUALS', 'MAIOREQUALS', 'SUMEQUALS',
         'MINUSEQUALS', 'TIMESEQUALS', 'DIVIDEEQUALS',
-        'WHITESPACE'
+        'WHITESPACE', 'EOF'
     ] + list(RESERVED.values())
 
     t_PLUS = r'\+'
@@ -67,6 +67,35 @@ class AnaliserLexer(object):
     t_ASSIGN = r'='
     t_WHITESPACE = r'\s\s+'
     t_ignore = r'[\s]*\n'
+    t_EOF = r'$\(?![\r\n]\)'
+    t_IDENTIFIER = r'[a-zA-Z_]\w+'
+
+    # Regular expression rules for simple tokens
+
+    def __init__(self, **kwargs):
+
+        self.lexer = None
+        self.indents = [0]  # indentation stack
+        self.tokens_result = []    # token queue
+        self.tokens_result_str = []    # token queue
+
+    def input(self, *args, **kwds):
+        self.lexer.input(*args, **kwds)
+
+    def build(self, **kwargs):
+        self.lexer = lex.lex(module=self, optimize=1, debug=1)
+
+    def transform_tokens(self):
+
+        for token in self.tokens_result:
+            self.tokens_result_str.append(
+                "{0}, {1}, {2}, {3}".format(
+                    token.type,
+                    token.lineno,
+                    token.value,
+                    token.lexpos
+                )
+            )
 
     def t_NUMBER(self, t):
         r'\d+'
@@ -101,32 +130,10 @@ class AnaliserLexer(object):
         r'(/\*(.|\n)*?\*/)|(//.*)'
         pass
 
-    # Regular expression rules for simple tokens
-
-    def __init__(self, **kwargs):
-
-        self.lexer = None
-        self.indents = [0]  # indentation stack
-        self.tokens_result = []    # token queue
-        self.tokens_result_str = []    # token queue
-
-    def input(self, *args, **kwds):
-        self.lexer.input(*args, **kwds)
-
-    def build(self, **kwargs):
-        self.lexer = lex.lex(module=self, **kwargs)
-
-    def transform_tokens(self):
-
-        for token in self.tokens_result:
-            self.tokens_result_str.append(
-                "{0}, {1}, {2}, {3}".format(
-                    token.type,
-                    token.lineno,
-                    token.value,
-                    token.lexpos
-                )
-            )
+    # EOF handling rule
+    def t_eof(self, t):
+        if t is None:
+            return None
 
     def token(self):
         # loop until we find a valid token

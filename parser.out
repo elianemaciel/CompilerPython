@@ -50,50 +50,52 @@ Rule 30    expression -> literal
 Rule 31    statement -> for_statement
 Rule 32    list_statement -> statement list_statement
 Rule 33    list_statement -> empty
-Rule 34    block -> list_statement
-Rule 35    for_statement -> FOR expression COLON block
-Rule 36    if_statement -> IF expression COLON block
-Rule 37    if_statement -> IF expression COLON block ELSE COLON block
-Rule 38    if_statement -> IF expression COLON block ELIF COLON block ELSE COLON block
-Rule 39    if_statement -> IF expression COLON block ELIF expression COLON block
-Rule 40    while_statement -> WHILE expression COLON block
-Rule 41    return_statement -> RETURN
-Rule 42    return_statement -> RETURN variavel
-Rule 43    break_statement -> BREAK
-Rule 44    def_statement -> DEF expression COLON block
-Rule 45    class_statement -> CLASS expression COLON block
-Rule 46    continue_statement -> CONTINUE
-Rule 47    expression -> LPAREN expression RPAREN
+Rule 34    eof_statement -> expression EOF
+Rule 35    block -> list_statement
+Rule 36    for_statement -> FOR expression COLON block
+Rule 37    if_statement -> IF expression COLON block
+Rule 38    if_statement -> IF expression COLON block ELSE COLON block
+Rule 39    if_statement -> IF expression COLON block ELIF COLON block ELSE COLON block
+Rule 40    if_statement -> IF expression COLON block ELIF expression COLON block
+Rule 41    while_statement -> WHILE expression COLON block
+Rule 42    return_statement -> RETURN
+Rule 43    return_statement -> RETURN variavel
+Rule 44    break_statement -> BREAK
+Rule 45    def_statement -> DEF expression COLON block
+Rule 46    class_statement -> CLASS expression COLON block
+Rule 47    continue_statement -> CONTINUE
+Rule 48    expression -> LPAREN expression RPAREN
 
 Terminals, with rules where they appear
 
 AND                  : 24
 AS                   : 
 ASSIGN               : 27 29
-BREAK                : 43
-CLASS                : 45
-COLON                : 35 36 37 37 38 38 38 39 39 40 44 45
+BREAK                : 44
+CLASS                : 46
+COLON                : 36 37 38 38 39 39 39 40 40 41 45 46
 COMMA                : 6
-CONTINUE             : 46
-DEF                  : 44
+CONTINUE             : 47
+DEF                  : 45
 DIFF                 : 23
 DIVIDE               : 13
 DIVIDEEQUALS         : 17
-ELIF                 : 38 39
-ELSE                 : 37 38
+ELIF                 : 39 40
+ELSE                 : 38 39
+EOF                  : 34
 EQUALS               : 22
 EXPLAMATION          : 
 FALSE                : 4
-FOR                  : 35
+FOR                  : 36
 FROM                 : 
 GLOBAL               : 
-IF                   : 36 37 38 39
+IF                   : 37 38 39 40
 IMPORT               : 
 IN                   : 
 IS                   : 
 LBRACE               : 29
 LCOLC                : 9 26 29
-LPAREN               : 47
+LPAREN               : 48
 MAIOR                : 18
 MAIOREQUALS          : 20
 MENOR                : 19
@@ -110,35 +112,36 @@ PASS                 : 1
 PLUS                 : 10
 RBRACE               : 29
 RCOLC                : 9 26 29
-RETURN               : 41 42
-RPAREN               : 47
+RETURN               : 42 43
+RPAREN               : 48
 SEMICOLON            : 
 SUMEQUALS            : 14
 TIMES                : 12
 TIMESEQUALS          : 16
 TRUE                 : 3
-WHILE                : 40
+WHILE                : 41
 WHITESPACE           : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-block                : 35 36 37 37 38 38 38 39 39 40 44 45
+block                : 36 37 38 38 39 39 39 40 40 41 45 46
 break_statement      : 
 class_statement      : 
 continue_statement   : 
 def_statement        : 
 empty                : 33 0
-expression           : 9 10 10 11 11 14 15 16 17 18 18 19 19 20 20 21 21 22 22 23 23 24 24 25 25 27 35 36 37 38 39 39 40 44 45 47
+eof_statement        : 
+expression           : 9 10 10 11 11 14 15 16 17 18 18 19 19 20 20 21 21 22 22 23 23 24 24 25 25 27 34 36 37 38 39 40 40 41 45 46 48
 for_statement        : 31
 if_statement         : 
-list_statement       : 32 34
+list_statement       : 32 35
 literal              : 6 7 12 12 13 13 30
 return_statement     : 
 sequence_literal     : 6
 statement            : 32
 var_Especification   : 
-variavel             : 42
+variavel             : 43
 while_statement      : 
 
 Parsing method: LALR

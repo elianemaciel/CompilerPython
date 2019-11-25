@@ -5,7 +5,7 @@ _tabversion = '3.5'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'DA58B62FB486129BD3781C34B4556887'
+_lr_signature = 'E42E426BDCF056A98D4A365D0EB4DBC7'
     
 _lr_action_items = {'PASS':([0,],[2,]),'$end':([1,2,],[0,-1,]),}
 
@@ -59,18 +59,19 @@ _lr_productions = [
   ('statement -> for_statement','statement',1,'p_statement','grammar.py',128),
   ('list_statement -> statement list_statement','list_statement',2,'p_list_statement','grammar.py',141),
   ('list_statement -> empty','list_statement',1,'p_list_statement','grammar.py',142),
-  ('block -> list_statement','block',1,'p_block','grammar.py',147),
-  ('for_statement -> FOR expression COLON block','for_statement',4,'p_statement_for','grammar.py',152),
-  ('if_statement -> IF expression COLON block','if_statement',4,'p_statement_if','grammar.py',156),
-  ('if_statement -> IF expression COLON block ELSE COLON block','if_statement',7,'p_statement_if','grammar.py',157),
-  ('if_statement -> IF expression COLON block ELIF COLON block ELSE COLON block','if_statement',10,'p_statement_if','grammar.py',158),
-  ('if_statement -> IF expression COLON block ELIF expression COLON block','if_statement',8,'p_statement_if','grammar.py',159),
-  ('while_statement -> WHILE expression COLON block','while_statement',4,'p_statement_while','grammar.py',167),
-  ('return_statement -> RETURN','return_statement',1,'p_statement_return','grammar.py',171),
-  ('return_statement -> RETURN variavel','return_statement',2,'p_statement_return','grammar.py',172),
-  ('break_statement -> BREAK','break_statement',1,'p_statement_break','grammar.py',176),
-  ('def_statement -> DEF expression COLON block','def_statement',4,'p_statement_def','grammar.py',180),
-  ('class_statement -> CLASS expression COLON block','class_statement',4,'p_statement_class','grammar.py',184),
-  ('continue_statement -> CONTINUE','continue_statement',1,'p_statement_continue','grammar.py',188),
-  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression','grammar.py',192),
+  ('eof_statement -> expression EOF','eof_statement',2,'p_statement_eof','grammar.py',146),
+  ('block -> list_statement','block',1,'p_block','grammar.py',153),
+  ('for_statement -> FOR expression COLON block','for_statement',4,'p_statement_for','grammar.py',158),
+  ('if_statement -> IF expression COLON block','if_statement',4,'p_statement_if','grammar.py',162),
+  ('if_statement -> IF expression COLON block ELSE COLON block','if_statement',7,'p_statement_if','grammar.py',163),
+  ('if_statement -> IF expression COLON block ELIF COLON block ELSE COLON block','if_statement',10,'p_statement_if','grammar.py',164),
+  ('if_statement -> IF expression COLON block ELIF expression COLON block','if_statement',8,'p_statement_if','grammar.py',165),
+  ('while_statement -> WHILE expression COLON block','while_statement',4,'p_statement_while','grammar.py',173),
+  ('return_statement -> RETURN','return_statement',1,'p_statement_return','grammar.py',177),
+  ('return_statement -> RETURN variavel','return_statement',2,'p_statement_return','grammar.py',178),
+  ('break_statement -> BREAK','break_statement',1,'p_statement_break','grammar.py',182),
+  ('def_statement -> DEF expression COLON block','def_statement',4,'p_statement_def','grammar.py',186),
+  ('class_statement -> CLASS expression COLON block','class_statement',4,'p_statement_class','grammar.py',190),
+  ('continue_statement -> CONTINUE','continue_statement',1,'p_statement_continue','grammar.py',194),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression','grammar.py',198),
 ]
