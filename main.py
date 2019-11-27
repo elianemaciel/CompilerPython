@@ -18,7 +18,7 @@ if __name__ == '__main__':
         lexer.lexer.input(line)
         print(lexer.token())
 
-    result = parser.parse(file_open.read(), lexer=lexer, debug=True)
+    result = parser.parse(file_open.read() + '\n', lexer=lexer)
     print(result)
 
     file_open.close()

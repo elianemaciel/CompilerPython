@@ -2,10 +2,6 @@
 
 import ply.yacc as yacc
 from exceptions_errors import sintaxe_erro, sinal_desconhecido
-from Variavel import Variavel
-from Declaracao import Declaracao
-from Bloco import Bloco
-from analisador_lexico import AnaliserLexer
 
 
 precedence = (
@@ -18,30 +14,33 @@ precedence = (
     ('right', 'NOT'),
 )
 
+# dictionary of names (for storing variables)
+names = {}
+
 
 # Definição
 def p_pass(p):
     'empty : PASS'
 
 
-def p_literal(t):
+def p_literal(p):
     '''literal : NUMBER
                | TRUE
                | FALSE
                | NORMALSTRING
     '''
-    t[0] = t[1]
+    p[0] = p[1]
 
 
-def p_sequence_literal(t):
+def p_sequence_literal(p):
     '''sequence_literal : literal COMMA sequence_literal
                         | literal'''
 
 
-def p_variavel(t):
+def p_variavel(p):
     '''variavel : NAME
                 | NAME LCOLC expression RCOLC'''
-    t[0] = t[1]
+    p[0] = p[1]
 
 
 def p_binary_operators(p):
@@ -79,14 +78,14 @@ def p_operators(p):
 
 
 def p_expression_logop(p):
-    '''expression : expression MAIOR expression
-                  | expression MENOR expression
-                  | expression MAIOREQUALS expression
-                  | expression MENOREQUALS expression
-                  | expression EQUALS expression
-                  | expression DIFF expression
-                  | expression AND expression
-                  | expression OR expression'''
+    '''comparison : literal MAIOR literal
+                  | literal MENOR literal
+                  | literal MAIOREQUALS literal
+                  | literal MENOREQUALS literal
+                  | literal EQUALS literal
+                  | literal DIFF literal
+                  | literal AND literal
+                  | literal OR literal'''
     if p[2] == '>':
         p[0] = p[1] > p[3]
     elif p[2] == '<':
@@ -107,27 +106,27 @@ def p_expression_logop(p):
         sinal_desconhecido(p)
 
 
-def p_var_Especification(p):
-    '''var_Especification   : NAME LCOLC NUMBER RCOLC
-                            | NAME ASSIGN expression
-                            | NAME
-                            | NAME LCOLC NUMBER RCOLC ASSIGN LBRACE  RBRACE'''
-    if len(p) == 2:
-        p[0] = Variavel(p[1], None)
-    elif len(p) == 4:
-        p[0] = Variavel(p[1], p[3])
+# def p_var_Especification(p):
+#     '''var_Especification   : NAME LCOLC NUMBER RCOLC
+#                             | NAME ASSIGN expression
+#                             | NAME
+#                             | NAME LCOLC NUMBER RCOLC ASSIGN LBRACE  RBRACE'''
+#     if len(p) == 2:
+#         p[0] = Variavel(p[1], None)
+#     elif len(p) == 4:
+#         p[0] = Variavel(p[1], p[3])
 
 
-def p_define_expression_literal(t):
+def p_define_expression_literal(p):
     'expression : literal'
-    t[0] = t[1]
+    p[0] = p[1]
 
 
 # statements
-def p_statement(t):
+def p_statement(p):
     '''statement    : for_statement
     '''
-    t[0] = t[1]
+    p[0] = p[1]
 
 #  # | break_statement
 #                 | return_statement
@@ -137,40 +136,56 @@ def p_statement(t):
 #                 | read_statement end
 
 
-def p_list_statement(t):
+def p_list_statement(p):
     '''list_statement : statement list_statement
                         | empty'''
 
 
 def p_statement_eof(p):
     '''eof_statement : expression EOF'''
+    '''              : EOF'''
 
     print("parsed:", p)
 
 
+def p_define_end_of_instruction(p):
+    'end : EOF'
+    return '$end'
+
+
 # block
-def p_block(t):
+def p_block(p):
     '''block : list_statement'''
-    t[0] = [t[1], t[2]]
+    p[0] = [p[1], p[2]]
 
 
-def p_statement_for(t):
+def p_statement_for(p):
     'for_statement  : FOR expression COLON block'
 
 
-def p_statement_if(t):
-    '''if_statement : IF expression COLON block
-                    | IF expression COLON block ELSE COLON block
-                    | IF expression COLON block ELIF COLON block ELSE COLON block
-                    | IF expression COLON block ELIF expression COLON block'''
-    if t[3]:
-        t[0] = t[6]
-    elif len(t) > 10:  # with else
-        t[0] = t[10]
+def p_statement_if(p):
+    '''if_statement : IF comparison COLON block
+                    | IF comparison COLON block ELSE COLON block
+                    | IF comparison COLON block ELIF comparison COLON block ELSE COLON block
+                    | IF comparison COLON block ELIF comparison COLON block'''
+    print(p)
+    if p[3] == ':':
+        if p[2]:
+            p[0] = p[5]
+        elif p[6] == 'else':
+            p[0] = p[7]
+        elif p[6] == 'elif' and p[7] and p[8] == ':':
+            p[0] = p[9]
+
+
+def p_empty(p):
+    '''empty : '''
 
 
 def p_statement_while(p):
     'while_statement : WHILE expression COLON block'
+    while(p[3]):
+        p[5]
 
 
 def p_statement_return(p):
@@ -183,11 +198,11 @@ def p_statement_break(p):
 
 
 def p_statement_def(p):
-    '''def_statement : DEF expression COLON block'''
+    '''def_statement : DEF NAME COLON block'''
 
 
 def p_statement_class(p):
-    '''class_statement : CLASS expression COLON block'''
+    '''class_statement : CLASS NAME COLON block'''
 
 
 def p_statement_continue(p):
@@ -199,6 +214,17 @@ def p_expression(p):
     p[0] = p[2]
 
 
+# variable name literal expression: <expression> -> NAME
+def p_expression_name(p):
+    'expression : NAME'
+    # attempt to lookup variable in current dictionary, throw error if not found
+    try:
+        p[0] = names[p[1]]
+    except LookupError:
+        print("Undefined name '%s'" % p[1])
+        p[0] = 0
+
+
 # Error rule for syntax errors
 def p_error(p):
     if p:
@@ -206,5 +232,7 @@ def p_error(p):
         # Just discard the token and tell the parser it's okay.
         parser.errok()
     else:
-        print("Syntax error at EOF")
+        pass
+        #print(p)
+        #print("Syntax error at EOF")
 

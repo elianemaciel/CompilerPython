@@ -66,24 +66,31 @@ class AnaliserLexer(object):
     t_DIVIDEEQUALS = r'/='
     t_ASSIGN = r'='
     t_WHITESPACE = r'\s\s+'
-    t_ignore = r'[\s]*\n'
+    t_ignore = r' \t'
     t_EOF = r'$\(?![\r\n]\)'
-    t_IDENTIFIER = r'[a-zA-Z_]\w+'
+
+    t_IF = r'if'
+    t_ELSE = r'else'
+    t_WHILE = r'while'
+    t_FOR = r'for'
 
     # Regular expression rules for simple tokens
 
-    def __init__(self, **kwargs):
+    def __init__(self, eoftoken='EOF', **kwargs):
 
         self.lexer = None
         self.indents = [0]  # indentation stack
         self.tokens_result = []    # token queue
         self.tokens_result_str = []    # token queue
 
+        self.end = False
+        self.eof = eoftoken
+
     def input(self, *args, **kwds):
         self.lexer.input(*args, **kwds)
 
     def build(self, **kwargs):
-        self.lexer = lex.lex(module=self, optimize=1, debug=1)
+        self.lexer = lex.lex(module=self)
 
     def transform_tokens(self):
 
@@ -108,7 +115,7 @@ class AnaliserLexer(object):
 
     # Error handling rule
     def t_error(self, t):
-        print("Illegal character '%s'" % t.value[0])
+        print("Caractere inválido '%s'" % t.value[0])
         t.lexer.skip(1)
 
     def t_NAME(self, t):
@@ -148,6 +155,17 @@ class AnaliserLexer(object):
             if token and token.type != 'WHITESPACE':
                 continue
 
+            if token is None:
+                if self.end:
+                    self.end = False
+                else:
+                    self.end = True
+                    tok = lex.LexToken()
+                    tok.type = self.eof
+                    tok.value = None
+                    tok.lexpos = self.lexer.lexpos
+                    tok.lineno = self.lexer.lineno
+                    print('custom', tok)
             if not token:
                 break
 

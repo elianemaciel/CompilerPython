@@ -1,18 +1,21 @@
-Created by PLY version 3.6 (http://www.dabeaz.com/ply)
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    SEMICOLON
-    EXPLAMATION
-    WHITESPACE
-    NONE
     AS
+    ASSIGN
+    EXPLAMATION
     FROM
     GLOBAL
     IMPORT
     IN
     IS
+    LBRACE
+    NONE
     NOT
+    RBRACE
+    SEMICOLON
+    WHITESPACE
 
 Grammar
 
@@ -34,114 +37,114 @@ Rule 14    expression -> SUMEQUALS expression
 Rule 15    expression -> MINUSEQUALS expression
 Rule 16    expression -> TIMESEQUALS expression
 Rule 17    expression -> DIVIDEEQUALS expression
-Rule 18    expression -> expression MAIOR expression
-Rule 19    expression -> expression MENOR expression
-Rule 20    expression -> expression MAIOREQUALS expression
-Rule 21    expression -> expression MENOREQUALS expression
-Rule 22    expression -> expression EQUALS expression
-Rule 23    expression -> expression DIFF expression
-Rule 24    expression -> expression AND expression
-Rule 25    expression -> expression OR expression
-Rule 26    var_Especification -> NAME LCOLC NUMBER RCOLC
-Rule 27    var_Especification -> NAME ASSIGN expression
-Rule 28    var_Especification -> NAME
-Rule 29    var_Especification -> NAME LCOLC NUMBER RCOLC ASSIGN LBRACE RBRACE
-Rule 30    expression -> literal
-Rule 31    statement -> for_statement
-Rule 32    list_statement -> statement list_statement
-Rule 33    list_statement -> empty
-Rule 34    eof_statement -> expression EOF
-Rule 35    block -> list_statement
-Rule 36    for_statement -> FOR expression COLON block
-Rule 37    if_statement -> IF expression COLON block
-Rule 38    if_statement -> IF expression COLON block ELSE COLON block
-Rule 39    if_statement -> IF expression COLON block ELIF COLON block ELSE COLON block
-Rule 40    if_statement -> IF expression COLON block ELIF expression COLON block
-Rule 41    while_statement -> WHILE expression COLON block
-Rule 42    return_statement -> RETURN
-Rule 43    return_statement -> RETURN variavel
-Rule 44    break_statement -> BREAK
-Rule 45    def_statement -> DEF expression COLON block
-Rule 46    class_statement -> CLASS expression COLON block
-Rule 47    continue_statement -> CONTINUE
-Rule 48    expression -> LPAREN expression RPAREN
+Rule 18    comparison -> literal MAIOR literal
+Rule 19    comparison -> literal MENOR literal
+Rule 20    comparison -> literal MAIOREQUALS literal
+Rule 21    comparison -> literal MENOREQUALS literal
+Rule 22    comparison -> literal EQUALS literal
+Rule 23    comparison -> literal DIFF literal
+Rule 24    comparison -> literal AND literal
+Rule 25    comparison -> literal OR literal
+Rule 26    expression -> literal
+Rule 27    statement -> for_statement
+Rule 28    list_statement -> statement list_statement
+Rule 29    list_statement -> empty
+Rule 30    eof_statement -> expression EOF
+Rule 31    end -> EOF
+Rule 32    block -> list_statement
+Rule 33    for_statement -> FOR expression COLON block
+Rule 34    if_statement -> IF comparison COLON block
+Rule 35    if_statement -> IF comparison COLON block ELSE COLON block
+Rule 36    if_statement -> IF comparison COLON block ELIF comparison COLON block ELSE COLON block
+Rule 37    if_statement -> IF comparison COLON block ELIF comparison COLON block
+Rule 38    empty -> <empty>
+Rule 39    while_statement -> WHILE expression COLON block
+Rule 40    return_statement -> RETURN
+Rule 41    return_statement -> RETURN variavel
+Rule 42    break_statement -> BREAK
+Rule 43    def_statement -> DEF NAME COLON block
+Rule 44    class_statement -> CLASS NAME COLON block
+Rule 45    continue_statement -> CONTINUE
+Rule 46    expression -> LPAREN expression RPAREN
+Rule 47    expression -> NAME
 
 Terminals, with rules where they appear
 
 AND                  : 24
 AS                   : 
-ASSIGN               : 27 29
-BREAK                : 44
-CLASS                : 46
-COLON                : 36 37 38 38 39 39 39 40 40 41 45 46
+ASSIGN               : 
+BREAK                : 42
+CLASS                : 44
+COLON                : 33 34 35 35 36 36 36 37 37 39 43 44
 COMMA                : 6
-CONTINUE             : 47
-DEF                  : 45
+CONTINUE             : 45
+DEF                  : 43
 DIFF                 : 23
 DIVIDE               : 13
 DIVIDEEQUALS         : 17
-ELIF                 : 39 40
-ELSE                 : 38 39
-EOF                  : 34
+ELIF                 : 36 37
+ELSE                 : 35 36
+EOF                  : 30 31
 EQUALS               : 22
 EXPLAMATION          : 
 FALSE                : 4
-FOR                  : 36
+FOR                  : 33
 FROM                 : 
 GLOBAL               : 
-IF                   : 37 38 39 40
+IF                   : 34 35 36 37
 IMPORT               : 
 IN                   : 
 IS                   : 
-LBRACE               : 29
-LCOLC                : 9 26 29
-LPAREN               : 48
+LBRACE               : 
+LCOLC                : 9
+LPAREN               : 46
 MAIOR                : 18
 MAIOREQUALS          : 20
 MENOR                : 19
 MENOREQUALS          : 21
 MINUS                : 11
 MINUSEQUALS          : 15
-NAME                 : 8 9 26 27 28 29
+NAME                 : 8 9 43 44 47
 NONE                 : 
 NORMALSTRING         : 5
 NOT                  : 
-NUMBER               : 2 26 29
+NUMBER               : 2
 OR                   : 25
 PASS                 : 1
 PLUS                 : 10
-RBRACE               : 29
-RCOLC                : 9 26 29
-RETURN               : 42 43
-RPAREN               : 48
+RBRACE               : 
+RCOLC                : 9
+RETURN               : 40 41
+RPAREN               : 46
 SEMICOLON            : 
 SUMEQUALS            : 14
 TIMES                : 12
 TIMESEQUALS          : 16
 TRUE                 : 3
-WHILE                : 41
+WHILE                : 39
 WHITESPACE           : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-block                : 36 37 38 38 39 39 39 40 40 41 45 46
+block                : 33 34 35 35 36 36 36 37 37 39 43 44
 break_statement      : 
 class_statement      : 
+comparison           : 34 35 36 36 37 37
 continue_statement   : 
 def_statement        : 
-empty                : 33 0
+empty                : 29 0
+end                  : 
 eof_statement        : 
-expression           : 9 10 10 11 11 14 15 16 17 18 18 19 19 20 20 21 21 22 22 23 23 24 24 25 25 27 34 36 37 38 39 40 40 41 45 46 48
-for_statement        : 31
+expression           : 9 10 10 11 11 14 15 16 17 30 33 39 46
+for_statement        : 27
 if_statement         : 
-list_statement       : 32 35
-literal              : 6 7 12 12 13 13 30
+list_statement       : 28 32
+literal              : 6 7 12 12 13 13 18 18 19 19 20 20 21 21 22 22 23 23 24 24 25 25 26
 return_statement     : 
 sequence_literal     : 6
-statement            : 32
-var_Especification   : 
-variavel             : 43
+statement            : 28
+variavel             : 41
 while_statement      : 
 
 Parsing method: LALR
@@ -150,8 +153,10 @@ state 0
 
     (0) S' -> . empty
     (1) empty -> . PASS
+    (38) empty -> .
 
     PASS            shift and go to state 2
+    $end            reduce using rule 38 (empty -> .)
 
     empty                          shift and go to state 1
 
