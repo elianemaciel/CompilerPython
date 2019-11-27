@@ -1,21 +1,17 @@
 # -*- coding: UTF-8 -*-
 
 
-def sinal_desconhecido(t):
-    print(
-        u"Sinal não reconhecido '{0}', linha {1} , coluna {2}!".format(
-            t.value, t.lineno, t.lexpos
+class SinalDesconhecido(Exception):
+
+    def __init__(self, token):
+        self.message = "Sinal não reconhecido '{0}', linha {1} , coluna {2}!".format(
+            token.value, token.lineno, token.lexpos
         )
-    )
 
 
-def sintaxe_erro(t):
-    if t:
-        print(
-            "Erro sintaxe '{0}', linha {1} , coluna {2}".format(
-                t.value, t.lineno, t.lexpos
+class SyntaxError(Exception):
+
+    def __init__(self, token):
+        self.message = "Erro sintaxe '{0}', linha {1} , coluna {2}".format(
+                token.value, token.lineno, token.lexpos
             )
-        )
-    else:
-        print("Errp de sintaxe EOF")
-        raise SystemExit

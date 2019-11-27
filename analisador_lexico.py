@@ -1,4 +1,4 @@
-from ply import lex
+from sly import Lexer
 import copy
 
 
@@ -17,13 +17,10 @@ RESERVED = {
     'class': 'CLASS',
     'None': 'NONE',
     'and': 'AND',
-    'as': 'AS',
     'continue': 'CONTINUE',
     'from': 'FROM',
-    'global': 'GLOBAL',
     'import': 'IMPORT',
     'in': 'IN',
-    'is': 'IS',
     'not': 'NOT',
     'or': 'OR',
 }
@@ -35,7 +32,6 @@ class AnaliserLexer(object):
         'NAME', 'NUMBER', 'NORMALSTRING', 'PLUS', 'MINUS',
         'TIMES', 'DIVIDE', 'ASSIGN', 'RPAREN', 'LPAREN',
         'RCOLC', 'LCOLC', 'RBRACE', 'LBRACE', 'COMMA',
-        'SEMICOLON', 'EXPLAMATION',
         'COLON', 'EQUALS', 'DIFF', 'MENOR', 'MAIOR',
         'MENOREQUALS', 'MAIOREQUALS', 'SUMEQUALS',
         'MINUSEQUALS', 'TIMESEQUALS', 'DIVIDEEQUALS',
@@ -82,15 +78,13 @@ class AnaliserLexer(object):
         self.indents = [0]  # indentation stack
         self.tokens_result = []    # token queue
         self.tokens_result_str = []    # token queue
+        self.lexer = lex.lex(module=self)
 
         self.end = False
         self.eof = eoftoken
 
-    def input(self, *args, **kwds):
-        self.lexer.input(*args, **kwds)
-
-    def build(self, **kwargs):
-        self.lexer = lex.lex(module=self)
+    def input(self, s):
+        self.input = self.lexer.input(s)
 
     def transform_tokens(self):
 
