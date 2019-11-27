@@ -9,7 +9,7 @@ class SinalDesconhecido(Exception):
         )
 
 
-class SyntaxError(Exception):
+class SyntaxeError(Exception):
 
     def __init__(self, token):
         self.message = "Erro sintaxe '{0}', linha {1} , coluna {2}".format(

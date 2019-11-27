@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-import ply.yacc as yacc
+from sly import Parser
 from exceptions_errors import SyntaxeError, SinalDesconhecido
 from analisador_lexico import AnaliserLexer
 
 
-class MyParser(object):
+class MyParser(Parser):
     tokens = AnaliserLexer.tokens
 
     precedence = (
