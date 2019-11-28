@@ -43,10 +43,6 @@ class AnaliserLexer(Lexer):
     EOF = r'$\(?![\r\n]\)'
     ignore_comment = r'\#.*'
     ignore_newline = r'\n+'
-
-    # IF = r'if'
-    # ELSE = r'else'
-    # WHILE = r'while'
     FOR = r'for'
     BREAK = r'breack'
     FALSE = r'false'
@@ -57,19 +53,19 @@ class AnaliserLexer(Lexer):
     DEF = r'def'
     CLASS = r'class'
     NONE = r'None'
-    AND = r'and'
     CONTINUE = r'continue'
     FROM = r'from'
     IMPORT = r'import'
     IN = r'in'
     NOT = r'not'
-    OR = r'or'
     ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
 
     # Special cases
     ID['if'] = IF
     ID['else'] = ELSE
     ID['while'] = WHILE
+    ID['AND'] = AND
+    ID['OR'] = OR
 
     def __init__(self, eoftoken='EOF', **kwargs):
 
