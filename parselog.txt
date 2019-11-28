@@ -1,1 +1,0 @@
-    lex.py: 705:t_ignore contains a literal backslash '\'

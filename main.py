@@ -4,7 +4,7 @@
 # Autora 2: Guilherme Menin Stedile
 from ply import lex, yacc
 from analisador_lexico import AnaliserLexer
-# from grammar import MyParser
+from grammar import MyParser
 
 
 if __name__ == '__main__':
@@ -12,9 +12,13 @@ if __name__ == '__main__':
     file_open = open("fonte.txt", "r")
     data = file_open.read()
     lexer = AnaliserLexer()
+    parser = MyParser()
 
-    lexer.tokenize_data(data)
+    # lexer.tokenize_data(data)
 
+    result = parser.parse(lexer.tokenize(data))
+    print(result)
+    print(parser.names)
     # parser = MyParser()
     # parser.run(file_open.read())
     # file_open.close()

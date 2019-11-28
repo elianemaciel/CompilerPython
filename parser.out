@@ -1,673 +1,474 @@
-Created by PLY version 3.6 (http://www.dabeaz.com/ply)
+Grammar:
+
+Rule 0     S' -> statement
+Rule 1     statement -> ID ASSIGN expr
+Rule 2     expr -> LPAREN expr RPAREN
+Rule 3     expr -> expr DIVIDE term  [precedence=left, level=4]
+Rule 4     expr -> ID
+Rule 5     expr -> NUMBER
+Rule 6     expr -> term
+Rule 7     expr -> expr DIVIDE expr  [precedence=left, level=4]
+Rule 8     expr -> expr TIMES expr  [precedence=left, level=4]
+Rule 9     expr -> expr MINUS expr  [precedence=left, level=3]
+Rule 10    expr -> expr PLUS expr  [precedence=left, level=3]
+Rule 11    term -> PASS
+Rule 12    term -> ID
+Rule 13    sumequals -> ID SUMEQUALS NUMBER
+Rule 14    minusequals -> ID MINUSEQUALS NUMBER
+Rule 15    assign -> IF expr  [precedence=left, level=5]
+Rule 16    assign -> IF expr COLON expr
+Rule 17    assign -> ID ASSIGN NUMBER
 
 Unused terminals:
 
+    CONTINUE
+    AND
     WHITESPACE
+    WHILE
+    NORMALSTRING
+    RCOLC
+    FOR
+    LCOLC
+    MAIOR
+    EQUALS
+    TIMESEQUALS
+    ELIF
+    IMPORT
+    NOT
+    NAME
+    DIFF
+    MENOR
+    FALSE
+    DIVIDEEQUALS
+    RETURN
+    MAIOREQUALS
+    TRUE
+    RBRACE
+    LBRACE
+    DEF
+    MENOREQUALS
+    BREAK
+    NONE
+    EOF
+    ELSE
+    FROM
+    CLASS
     IN
+    OR
 
-Grammar
+Terminals, with rules where they appear:
 
-Rule 0     S' -> expression
-Rule 1     empty -> PASS
-Rule 2     literal -> NUMBER
-Rule 3     literal -> TRUE
-Rule 4     literal -> FALSE
-Rule 5     literal -> NORMALSTRING
-Rule 6     sequence_literal -> literal COMMA sequence_literal
-Rule 7     sequence_literal -> literal
-Rule 8     variavel -> NAME
-Rule 9     variavel -> NAME LCOLC expression RCOLC
-Rule 10    expression -> expression PLUS expression
-Rule 11    expression -> expression MINUS expression
-Rule 12    expression -> literal TIMES literal
-Rule 13    expression -> literal DIVIDE literal
-Rule 14    expression -> SUMEQUALS expression
-Rule 15    expression -> MINUSEQUALS expression
-Rule 16    expression -> TIMESEQUALS expression
-Rule 17    expression -> DIVIDEEQUALS expression
-Rule 18    assign -> ASSIGN expression
-Rule 19    comparison -> literal MAIOR literal
-Rule 20    comparison -> literal MENOR literal
-Rule 21    comparison -> literal MAIOREQUALS literal
-Rule 22    comparison -> literal MENOREQUALS literal
-Rule 23    comparison -> literal EQUALS literal
-Rule 24    comparison -> literal DIFF literal
-Rule 25    comparison -> literal AND literal
-Rule 26    comparison -> literal OR literal
-Rule 27    expression -> literal
-Rule 28    statement -> for_statement
-Rule 29    list_statement -> statement list_statement
-Rule 30    list_statement -> empty
-Rule 31    eof_statement -> expression EOF
-Rule 32    import -> FROM NAME IMPORT NAME
-Rule 33    import -> IMPORT NAME
-Rule 34    end -> EOF
-Rule 35    colon -> expression COLON
-Rule 36    dict -> RBRACE expression LBRACE
-Rule 37    none -> assign NONE
-Rule 38    not -> NOT expression
-Rule 39    not -> NOT literal
-Rule 40    block -> list_statement
-Rule 41    for_statement -> FOR expression COLON block
-Rule 42    if_statement -> IF comparison COLON block
-Rule 43    if_statement -> IF comparison COLON block ELSE COLON block
-Rule 44    if_statement -> IF comparison COLON block ELIF comparison COLON block ELSE COLON block
-Rule 45    if_statement -> IF comparison COLON block ELIF comparison COLON block
-Rule 46    empty -> <empty>
-Rule 47    while_statement -> WHILE expression COLON block
-Rule 48    return_statement -> RETURN
-Rule 49    return_statement -> RETURN variavel
-Rule 50    break_statement -> BREAK
-Rule 51    def_statement -> DEF NAME COLON block
-Rule 52    class_statement -> CLASS NAME COLON block
-Rule 53    continue_statement -> CONTINUE
-Rule 54    expression -> LPAREN expression RPAREN
-Rule 55    expression -> NAME
-
-Terminals, with rules where they appear
-
-AND                  : 25
-ASSIGN               : 18
-BREAK                : 50
-CLASS                : 52
-COLON                : 35 41 42 43 43 44 44 44 45 45 47 51 52
-COMMA                : 6
-CONTINUE             : 53
-DEF                  : 51
-DIFF                 : 24
-DIVIDE               : 13
-DIVIDEEQUALS         : 17
-ELIF                 : 44 45
-ELSE                 : 43 44
-EOF                  : 31 34
-EQUALS               : 23
-FALSE                : 4
-FOR                  : 41
-FROM                 : 32
-IF                   : 42 43 44 45
-IMPORT               : 32 33
+AND                  : 
+ASSIGN               : 1 17
+BREAK                : 
+CLASS                : 
+COLON                : 16
+CONTINUE             : 
+DEF                  : 
+DIFF                 : 
+DIVIDE               : 3 7
+DIVIDEEQUALS         : 
+ELIF                 : 
+ELSE                 : 
+EOF                  : 
+EQUALS               : 
+FALSE                : 
+FOR                  : 
+FROM                 : 
+ID                   : 1 4 12 13 14 17
+IF                   : 15 16
+IMPORT               : 
 IN                   : 
-LBRACE               : 36
-LCOLC                : 9
-LPAREN               : 54
-MAIOR                : 19
-MAIOREQUALS          : 21
-MENOR                : 20
-MENOREQUALS          : 22
-MINUS                : 11
-MINUSEQUALS          : 15
-NAME                 : 8 9 32 32 33 51 52 55
-NONE                 : 37
-NORMALSTRING         : 5
-NOT                  : 38 39
-NUMBER               : 2
-OR                   : 26
-PASS                 : 1
+LBRACE               : 
+LCOLC                : 
+LPAREN               : 2
+MAIOR                : 
+MAIOREQUALS          : 
+MENOR                : 
+MENOREQUALS          : 
+MINUS                : 9
+MINUSEQUALS          : 14
+NAME                 : 
+NONE                 : 
+NORMALSTRING         : 
+NOT                  : 
+NUMBER               : 5 13 14 17
+OR                   : 
+PASS                 : 11
 PLUS                 : 10
-RBRACE               : 36
-RCOLC                : 9
-RETURN               : 48 49
-RPAREN               : 54
-SUMEQUALS            : 14
-TIMES                : 12
-TIMESEQUALS          : 16
-TRUE                 : 3
-WHILE                : 47
+RBRACE               : 
+RCOLC                : 
+RETURN               : 
+RPAREN               : 2
+SUMEQUALS            : 13
+TIMES                : 8
+TIMESEQUALS          : 
+TRUE                 : 
+WHILE                : 
 WHITESPACE           : 
 error                : 
 
-Nonterminals, with rules where they appear
+Nonterminals, with rules where they appear:
 
-assign               : 37
-block                : 41 42 43 43 44 44 44 45 45 47 51 52
-break_statement      : 
-class_statement      : 
-colon                : 
-comparison           : 42 43 44 44 45 45
-continue_statement   : 
-def_statement        : 
-dict                 : 
-empty                : 30
-end                  : 
-eof_statement        : 
-expression           : 9 10 10 11 11 14 15 16 17 18 31 35 36 38 41 47 54 0
-for_statement        : 28
-if_statement         : 
-import               : 
-list_statement       : 29 40
-literal              : 6 7 12 12 13 13 19 19 20 20 21 21 22 22 23 23 24 24 25 25 26 26 27 39
-none                 : 
-not                  : 
-return_statement     : 
-sequence_literal     : 6
-statement            : 29
-variavel             : 49
-while_statement      : 
+assign               : 
+expr                 : 1 2 3 7 7 8 8 9 9 10 10 15 16 16
+minusequals          : 
+statement            : 0
+sumequals            : 
+term                 : 3 6
 
-Parsing method: LALR
 
 state 0
 
-    (0) S' -> . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . literal TIMES literal
-    (13) expression -> . literal DIVIDE literal
-    (14) expression -> . SUMEQUALS expression
-    (15) expression -> . MINUSEQUALS expression
-    (16) expression -> . TIMESEQUALS expression
-    (17) expression -> . DIVIDEEQUALS expression
-    (27) expression -> . literal
-    (54) expression -> . LPAREN expression RPAREN
-    (55) expression -> . NAME
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (0) S' -> . statement
+    (1) statement -> . ID ASSIGN expr
+    ID              shift and go to state 2
 
-    SUMEQUALS       shift and go to state 3
-    MINUSEQUALS     shift and go to state 4
-    TIMESEQUALS     shift and go to state 5
-    DIVIDEEQUALS    shift and go to state 6
-    LPAREN          shift and go to state 7
-    NAME            shift and go to state 8
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    expression                     shift and go to state 1
-    literal                        shift and go to state 2
+    statement                      shift and go to state 1
 
 state 1
 
-    (0) S' -> expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
+    (0) S' -> statement .
 
 
 state 2
 
-    (12) expression -> literal . TIMES literal
-    (13) expression -> literal . DIVIDE literal
-    (27) expression -> literal .
-
-    TIMES           shift and go to state 15
-    DIVIDE          shift and go to state 16
-    PLUS            reduce using rule 27 (expression -> literal .)
-    MINUS           reduce using rule 27 (expression -> literal .)
-    $end            reduce using rule 27 (expression -> literal .)
-    RPAREN          reduce using rule 27 (expression -> literal .)
+    (1) statement -> ID . ASSIGN expr
+    ASSIGN          shift and go to state 3
 
 
 state 3
 
-    (14) expression -> SUMEQUALS . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . literal TIMES literal
-    (13) expression -> . literal DIVIDE literal
-    (14) expression -> . SUMEQUALS expression
-    (15) expression -> . MINUSEQUALS expression
-    (16) expression -> . TIMESEQUALS expression
-    (17) expression -> . DIVIDEEQUALS expression
-    (27) expression -> . literal
-    (54) expression -> . LPAREN expression RPAREN
-    (55) expression -> . NAME
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (1) statement -> ID ASSIGN . expr
+    (2) expr -> . LPAREN expr RPAREN
+    (3) expr -> . expr DIVIDE term
+    (4) expr -> . ID
+    (5) expr -> . NUMBER
+    (6) expr -> . term
+    (7) expr -> . expr DIVIDE expr
+    (8) expr -> . expr TIMES expr
+    (9) expr -> . expr MINUS expr
+    (10) expr -> . expr PLUS expr
+    (11) term -> . PASS
+    (12) term -> . ID
+    LPAREN          shift and go to state 6
+    ID              shift and go to state 4
+    NUMBER          shift and go to state 8
+    PASS            shift and go to state 9
 
-    SUMEQUALS       shift and go to state 3
-    MINUSEQUALS     shift and go to state 4
-    TIMESEQUALS     shift and go to state 5
-    DIVIDEEQUALS    shift and go to state 6
-    LPAREN          shift and go to state 7
-    NAME            shift and go to state 8
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    expression                     shift and go to state 17
-    literal                        shift and go to state 2
+    expr                           shift and go to state 5
+    term                           shift and go to state 7
 
 state 4
 
-    (15) expression -> MINUSEQUALS . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . literal TIMES literal
-    (13) expression -> . literal DIVIDE literal
-    (14) expression -> . SUMEQUALS expression
-    (15) expression -> . MINUSEQUALS expression
-    (16) expression -> . TIMESEQUALS expression
-    (17) expression -> . DIVIDEEQUALS expression
-    (27) expression -> . literal
-    (54) expression -> . LPAREN expression RPAREN
-    (55) expression -> . NAME
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (4) expr -> ID .
+    (12) term -> ID .
+  ! reduce/reduce conflict for DIVIDE resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for TIMES resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for MINUS resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for PLUS resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for $end resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 4 (expr -> ID .)
+    DIVIDE          reduce using rule 4 (expr -> ID .)
+    TIMES           reduce using rule 4 (expr -> ID .)
+    MINUS           reduce using rule 4 (expr -> ID .)
+    PLUS            reduce using rule 4 (expr -> ID .)
+    $end            reduce using rule 4 (expr -> ID .)
+    RPAREN          reduce using rule 4 (expr -> ID .)
 
-    SUMEQUALS       shift and go to state 3
-    MINUSEQUALS     shift and go to state 4
-    TIMESEQUALS     shift and go to state 5
-    DIVIDEEQUALS    shift and go to state 6
-    LPAREN          shift and go to state 7
-    NAME            shift and go to state 8
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    expression                     shift and go to state 18
-    literal                        shift and go to state 2
 
 state 5
 
-    (16) expression -> TIMESEQUALS . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . literal TIMES literal
-    (13) expression -> . literal DIVIDE literal
-    (14) expression -> . SUMEQUALS expression
-    (15) expression -> . MINUSEQUALS expression
-    (16) expression -> . TIMESEQUALS expression
-    (17) expression -> . DIVIDEEQUALS expression
-    (27) expression -> . literal
-    (54) expression -> . LPAREN expression RPAREN
-    (55) expression -> . NAME
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (1) statement -> ID ASSIGN expr .
+    (3) expr -> expr . DIVIDE term
+    (7) expr -> expr . DIVIDE expr
+    (8) expr -> expr . TIMES expr
+    (9) expr -> expr . MINUS expr
+    (10) expr -> expr . PLUS expr
+    $end            reduce using rule 1 (statement -> ID ASSIGN expr .)
+    DIVIDE          shift and go to state 10
+    TIMES           shift and go to state 11
+    MINUS           shift and go to state 12
+    PLUS            shift and go to state 13
 
-    SUMEQUALS       shift and go to state 3
-    MINUSEQUALS     shift and go to state 4
-    TIMESEQUALS     shift and go to state 5
-    DIVIDEEQUALS    shift and go to state 6
-    LPAREN          shift and go to state 7
-    NAME            shift and go to state 8
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    expression                     shift and go to state 19
-    literal                        shift and go to state 2
 
 state 6
 
-    (17) expression -> DIVIDEEQUALS . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . literal TIMES literal
-    (13) expression -> . literal DIVIDE literal
-    (14) expression -> . SUMEQUALS expression
-    (15) expression -> . MINUSEQUALS expression
-    (16) expression -> . TIMESEQUALS expression
-    (17) expression -> . DIVIDEEQUALS expression
-    (27) expression -> . literal
-    (54) expression -> . LPAREN expression RPAREN
-    (55) expression -> . NAME
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (2) expr -> LPAREN . expr RPAREN
+    (2) expr -> . LPAREN expr RPAREN
+    (3) expr -> . expr DIVIDE term
+    (4) expr -> . ID
+    (5) expr -> . NUMBER
+    (6) expr -> . term
+    (7) expr -> . expr DIVIDE expr
+    (8) expr -> . expr TIMES expr
+    (9) expr -> . expr MINUS expr
+    (10) expr -> . expr PLUS expr
+    (11) term -> . PASS
+    (12) term -> . ID
+    LPAREN          shift and go to state 6
+    ID              shift and go to state 4
+    NUMBER          shift and go to state 8
+    PASS            shift and go to state 9
 
-    SUMEQUALS       shift and go to state 3
-    MINUSEQUALS     shift and go to state 4
-    TIMESEQUALS     shift and go to state 5
-    DIVIDEEQUALS    shift and go to state 6
-    LPAREN          shift and go to state 7
-    NAME            shift and go to state 8
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    expression                     shift and go to state 20
-    literal                        shift and go to state 2
+    expr                           shift and go to state 14
+    term                           shift and go to state 7
 
 state 7
 
-    (54) expression -> LPAREN . expression RPAREN
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . literal TIMES literal
-    (13) expression -> . literal DIVIDE literal
-    (14) expression -> . SUMEQUALS expression
-    (15) expression -> . MINUSEQUALS expression
-    (16) expression -> . TIMESEQUALS expression
-    (17) expression -> . DIVIDEEQUALS expression
-    (27) expression -> . literal
-    (54) expression -> . LPAREN expression RPAREN
-    (55) expression -> . NAME
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (6) expr -> term .
+    DIVIDE          reduce using rule 6 (expr -> term .)
+    TIMES           reduce using rule 6 (expr -> term .)
+    MINUS           reduce using rule 6 (expr -> term .)
+    PLUS            reduce using rule 6 (expr -> term .)
+    $end            reduce using rule 6 (expr -> term .)
+    RPAREN          reduce using rule 6 (expr -> term .)
 
-    SUMEQUALS       shift and go to state 3
-    MINUSEQUALS     shift and go to state 4
-    TIMESEQUALS     shift and go to state 5
-    DIVIDEEQUALS    shift and go to state 6
-    LPAREN          shift and go to state 7
-    NAME            shift and go to state 8
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    expression                     shift and go to state 21
-    literal                        shift and go to state 2
 
 state 8
 
-    (55) expression -> NAME .
-
-    PLUS            reduce using rule 55 (expression -> NAME .)
-    MINUS           reduce using rule 55 (expression -> NAME .)
-    $end            reduce using rule 55 (expression -> NAME .)
-    RPAREN          reduce using rule 55 (expression -> NAME .)
+    (5) expr -> NUMBER .
+    DIVIDE          reduce using rule 5 (expr -> NUMBER .)
+    TIMES           reduce using rule 5 (expr -> NUMBER .)
+    MINUS           reduce using rule 5 (expr -> NUMBER .)
+    PLUS            reduce using rule 5 (expr -> NUMBER .)
+    $end            reduce using rule 5 (expr -> NUMBER .)
+    RPAREN          reduce using rule 5 (expr -> NUMBER .)
 
 
 state 9
 
-    (2) literal -> NUMBER .
-
-    TIMES           reduce using rule 2 (literal -> NUMBER .)
-    DIVIDE          reduce using rule 2 (literal -> NUMBER .)
-    PLUS            reduce using rule 2 (literal -> NUMBER .)
-    MINUS           reduce using rule 2 (literal -> NUMBER .)
-    $end            reduce using rule 2 (literal -> NUMBER .)
-    RPAREN          reduce using rule 2 (literal -> NUMBER .)
+    (11) term -> PASS .
+    DIVIDE          reduce using rule 11 (term -> PASS .)
+    TIMES           reduce using rule 11 (term -> PASS .)
+    MINUS           reduce using rule 11 (term -> PASS .)
+    PLUS            reduce using rule 11 (term -> PASS .)
+    $end            reduce using rule 11 (term -> PASS .)
+    RPAREN          reduce using rule 11 (term -> PASS .)
 
 
 state 10
 
-    (3) literal -> TRUE .
+    (3) expr -> expr DIVIDE . term
+    (7) expr -> expr DIVIDE . expr
+    (11) term -> . PASS
+    (12) term -> . ID
+    (2) expr -> . LPAREN expr RPAREN
+    (3) expr -> . expr DIVIDE term
+    (4) expr -> . ID
+    (5) expr -> . NUMBER
+    (6) expr -> . term
+    (7) expr -> . expr DIVIDE expr
+    (8) expr -> . expr TIMES expr
+    (9) expr -> . expr MINUS expr
+    (10) expr -> . expr PLUS expr
+    PASS            shift and go to state 9
+    ID              shift and go to state 17
+    LPAREN          shift and go to state 6
+    NUMBER          shift and go to state 8
 
-    TIMES           reduce using rule 3 (literal -> TRUE .)
-    DIVIDE          reduce using rule 3 (literal -> TRUE .)
-    PLUS            reduce using rule 3 (literal -> TRUE .)
-    MINUS           reduce using rule 3 (literal -> TRUE .)
-    $end            reduce using rule 3 (literal -> TRUE .)
-    RPAREN          reduce using rule 3 (literal -> TRUE .)
-
+    expr                           shift and go to state 15
+    term                           shift and go to state 16
 
 state 11
 
-    (4) literal -> FALSE .
+    (8) expr -> expr TIMES . expr
+    (2) expr -> . LPAREN expr RPAREN
+    (3) expr -> . expr DIVIDE term
+    (4) expr -> . ID
+    (5) expr -> . NUMBER
+    (6) expr -> . term
+    (7) expr -> . expr DIVIDE expr
+    (8) expr -> . expr TIMES expr
+    (9) expr -> . expr MINUS expr
+    (10) expr -> . expr PLUS expr
+    (11) term -> . PASS
+    (12) term -> . ID
+    LPAREN          shift and go to state 6
+    ID              shift and go to state 4
+    NUMBER          shift and go to state 8
+    PASS            shift and go to state 9
 
-    TIMES           reduce using rule 4 (literal -> FALSE .)
-    DIVIDE          reduce using rule 4 (literal -> FALSE .)
-    PLUS            reduce using rule 4 (literal -> FALSE .)
-    MINUS           reduce using rule 4 (literal -> FALSE .)
-    $end            reduce using rule 4 (literal -> FALSE .)
-    RPAREN          reduce using rule 4 (literal -> FALSE .)
-
+    expr                           shift and go to state 18
+    term                           shift and go to state 7
 
 state 12
 
-    (5) literal -> NORMALSTRING .
+    (9) expr -> expr MINUS . expr
+    (2) expr -> . LPAREN expr RPAREN
+    (3) expr -> . expr DIVIDE term
+    (4) expr -> . ID
+    (5) expr -> . NUMBER
+    (6) expr -> . term
+    (7) expr -> . expr DIVIDE expr
+    (8) expr -> . expr TIMES expr
+    (9) expr -> . expr MINUS expr
+    (10) expr -> . expr PLUS expr
+    (11) term -> . PASS
+    (12) term -> . ID
+    LPAREN          shift and go to state 6
+    ID              shift and go to state 4
+    NUMBER          shift and go to state 8
+    PASS            shift and go to state 9
 
-    TIMES           reduce using rule 5 (literal -> NORMALSTRING .)
-    DIVIDE          reduce using rule 5 (literal -> NORMALSTRING .)
-    PLUS            reduce using rule 5 (literal -> NORMALSTRING .)
-    MINUS           reduce using rule 5 (literal -> NORMALSTRING .)
-    $end            reduce using rule 5 (literal -> NORMALSTRING .)
-    RPAREN          reduce using rule 5 (literal -> NORMALSTRING .)
-
+    expr                           shift and go to state 19
+    term                           shift and go to state 7
 
 state 13
 
-    (10) expression -> expression PLUS . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . literal TIMES literal
-    (13) expression -> . literal DIVIDE literal
-    (14) expression -> . SUMEQUALS expression
-    (15) expression -> . MINUSEQUALS expression
-    (16) expression -> . TIMESEQUALS expression
-    (17) expression -> . DIVIDEEQUALS expression
-    (27) expression -> . literal
-    (54) expression -> . LPAREN expression RPAREN
-    (55) expression -> . NAME
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (10) expr -> expr PLUS . expr
+    (2) expr -> . LPAREN expr RPAREN
+    (3) expr -> . expr DIVIDE term
+    (4) expr -> . ID
+    (5) expr -> . NUMBER
+    (6) expr -> . term
+    (7) expr -> . expr DIVIDE expr
+    (8) expr -> . expr TIMES expr
+    (9) expr -> . expr MINUS expr
+    (10) expr -> . expr PLUS expr
+    (11) term -> . PASS
+    (12) term -> . ID
+    LPAREN          shift and go to state 6
+    ID              shift and go to state 4
+    NUMBER          shift and go to state 8
+    PASS            shift and go to state 9
 
-    SUMEQUALS       shift and go to state 3
-    MINUSEQUALS     shift and go to state 4
-    TIMESEQUALS     shift and go to state 5
-    DIVIDEEQUALS    shift and go to state 6
-    LPAREN          shift and go to state 7
-    NAME            shift and go to state 8
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    expression                     shift and go to state 22
-    literal                        shift and go to state 2
+    expr                           shift and go to state 20
+    term                           shift and go to state 7
 
 state 14
 
-    (11) expression -> expression MINUS . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . literal TIMES literal
-    (13) expression -> . literal DIVIDE literal
-    (14) expression -> . SUMEQUALS expression
-    (15) expression -> . MINUSEQUALS expression
-    (16) expression -> . TIMESEQUALS expression
-    (17) expression -> . DIVIDEEQUALS expression
-    (27) expression -> . literal
-    (54) expression -> . LPAREN expression RPAREN
-    (55) expression -> . NAME
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (2) expr -> LPAREN expr . RPAREN
+    (3) expr -> expr . DIVIDE term
+    (7) expr -> expr . DIVIDE expr
+    (8) expr -> expr . TIMES expr
+    (9) expr -> expr . MINUS expr
+    (10) expr -> expr . PLUS expr
+    RPAREN          shift and go to state 21
+    DIVIDE          shift and go to state 10
+    TIMES           shift and go to state 11
+    MINUS           shift and go to state 12
+    PLUS            shift and go to state 13
 
-    SUMEQUALS       shift and go to state 3
-    MINUSEQUALS     shift and go to state 4
-    TIMESEQUALS     shift and go to state 5
-    DIVIDEEQUALS    shift and go to state 6
-    LPAREN          shift and go to state 7
-    NAME            shift and go to state 8
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    expression                     shift and go to state 23
-    literal                        shift and go to state 2
 
 state 15
 
-    (12) expression -> literal TIMES . literal
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (7) expr -> expr DIVIDE expr .
+    (3) expr -> expr . DIVIDE term
+    (7) expr -> expr . DIVIDE expr
+    (8) expr -> expr . TIMES expr
+    (9) expr -> expr . MINUS expr
+    (10) expr -> expr . PLUS expr
+    DIVIDE          reduce using rule 7 (expr -> expr DIVIDE expr .)
+    TIMES           reduce using rule 7 (expr -> expr DIVIDE expr .)
+    MINUS           reduce using rule 7 (expr -> expr DIVIDE expr .)
+    PLUS            reduce using rule 7 (expr -> expr DIVIDE expr .)
+    $end            reduce using rule 7 (expr -> expr DIVIDE expr .)
+    RPAREN          reduce using rule 7 (expr -> expr DIVIDE expr .)
 
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    literal                        shift and go to state 24
 
 state 16
 
-    (13) expression -> literal DIVIDE . literal
-    (2) literal -> . NUMBER
-    (3) literal -> . TRUE
-    (4) literal -> . FALSE
-    (5) literal -> . NORMALSTRING
+    (3) expr -> expr DIVIDE term .
+    (6) expr -> term .
+  ! reduce/reduce conflict for DIVIDE resolved using rule 6 (expr -> term .)
+  ! reduce/reduce conflict for TIMES resolved using rule 6 (expr -> term .)
+  ! reduce/reduce conflict for MINUS resolved using rule 6 (expr -> term .)
+  ! reduce/reduce conflict for PLUS resolved using rule 6 (expr -> term .)
+  ! reduce/reduce conflict for $end resolved using rule 6 (expr -> term .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 6 (expr -> term .)
+    DIVIDE          reduce using rule 6 (expr -> term .)
+    TIMES           reduce using rule 6 (expr -> term .)
+    MINUS           reduce using rule 6 (expr -> term .)
+    PLUS            reduce using rule 6 (expr -> term .)
+    $end            reduce using rule 6 (expr -> term .)
+    RPAREN          reduce using rule 6 (expr -> term .)
 
-    NUMBER          shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
-    NORMALSTRING    shift and go to state 12
-
-    literal                        shift and go to state 25
 
 state 17
 
-    (14) expression -> SUMEQUALS expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-    $end            reduce using rule 14 (expression -> SUMEQUALS expression .)
-    RPAREN          reduce using rule 14 (expression -> SUMEQUALS expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-
-  ! PLUS            [ reduce using rule 14 (expression -> SUMEQUALS expression .) ]
-  ! MINUS           [ reduce using rule 14 (expression -> SUMEQUALS expression .) ]
+    (12) term -> ID .
+    (4) expr -> ID .
+  ! reduce/reduce conflict for DIVIDE resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for TIMES resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for MINUS resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for PLUS resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for $end resolved using rule 4 (expr -> ID .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 4 (expr -> ID .)
+    DIVIDE          reduce using rule 4 (expr -> ID .)
+    TIMES           reduce using rule 4 (expr -> ID .)
+    MINUS           reduce using rule 4 (expr -> ID .)
+    PLUS            reduce using rule 4 (expr -> ID .)
+    $end            reduce using rule 4 (expr -> ID .)
+    RPAREN          reduce using rule 4 (expr -> ID .)
 
 
 state 18
 
-    (15) expression -> MINUSEQUALS expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-    $end            reduce using rule 15 (expression -> MINUSEQUALS expression .)
-    RPAREN          reduce using rule 15 (expression -> MINUSEQUALS expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-
-  ! PLUS            [ reduce using rule 15 (expression -> MINUSEQUALS expression .) ]
-  ! MINUS           [ reduce using rule 15 (expression -> MINUSEQUALS expression .) ]
+    (8) expr -> expr TIMES expr .
+    (3) expr -> expr . DIVIDE term
+    (7) expr -> expr . DIVIDE expr
+    (8) expr -> expr . TIMES expr
+    (9) expr -> expr . MINUS expr
+    (10) expr -> expr . PLUS expr
+    DIVIDE          reduce using rule 8 (expr -> expr TIMES expr .)
+    TIMES           reduce using rule 8 (expr -> expr TIMES expr .)
+    MINUS           reduce using rule 8 (expr -> expr TIMES expr .)
+    PLUS            reduce using rule 8 (expr -> expr TIMES expr .)
+    $end            reduce using rule 8 (expr -> expr TIMES expr .)
+    RPAREN          reduce using rule 8 (expr -> expr TIMES expr .)
 
 
 state 19
 
-    (16) expression -> TIMESEQUALS expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-    $end            reduce using rule 16 (expression -> TIMESEQUALS expression .)
-    RPAREN          reduce using rule 16 (expression -> TIMESEQUALS expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-
-  ! PLUS            [ reduce using rule 16 (expression -> TIMESEQUALS expression .) ]
-  ! MINUS           [ reduce using rule 16 (expression -> TIMESEQUALS expression .) ]
+    (9) expr -> expr MINUS expr .
+    (3) expr -> expr . DIVIDE term
+    (7) expr -> expr . DIVIDE expr
+    (8) expr -> expr . TIMES expr
+    (9) expr -> expr . MINUS expr
+    (10) expr -> expr . PLUS expr
+    MINUS           reduce using rule 9 (expr -> expr MINUS expr .)
+    PLUS            reduce using rule 9 (expr -> expr MINUS expr .)
+    $end            reduce using rule 9 (expr -> expr MINUS expr .)
+    RPAREN          reduce using rule 9 (expr -> expr MINUS expr .)
+    DIVIDE          shift and go to state 10
+    TIMES           shift and go to state 11
 
 
 state 20
 
-    (17) expression -> DIVIDEEQUALS expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-    $end            reduce using rule 17 (expression -> DIVIDEEQUALS expression .)
-    RPAREN          reduce using rule 17 (expression -> DIVIDEEQUALS expression .)
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-
-  ! PLUS            [ reduce using rule 17 (expression -> DIVIDEEQUALS expression .) ]
-  ! MINUS           [ reduce using rule 17 (expression -> DIVIDEEQUALS expression .) ]
+    (10) expr -> expr PLUS expr .
+    (3) expr -> expr . DIVIDE term
+    (7) expr -> expr . DIVIDE expr
+    (8) expr -> expr . TIMES expr
+    (9) expr -> expr . MINUS expr
+    (10) expr -> expr . PLUS expr
+    MINUS           reduce using rule 10 (expr -> expr PLUS expr .)
+    PLUS            reduce using rule 10 (expr -> expr PLUS expr .)
+    $end            reduce using rule 10 (expr -> expr PLUS expr .)
+    RPAREN          reduce using rule 10 (expr -> expr PLUS expr .)
+    DIVIDE          shift and go to state 10
+    TIMES           shift and go to state 11
 
 
 state 21
 
-    (54) expression -> LPAREN expression . RPAREN
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-
-    RPAREN          shift and go to state 26
-    PLUS            shift and go to state 13
-    MINUS           shift and go to state 14
-
-
-state 22
-
-    (10) expression -> expression PLUS expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-
-    PLUS            reduce using rule 10 (expression -> expression PLUS expression .)
-    MINUS           reduce using rule 10 (expression -> expression PLUS expression .)
-    $end            reduce using rule 10 (expression -> expression PLUS expression .)
-    RPAREN          reduce using rule 10 (expression -> expression PLUS expression .)
-
-  ! PLUS            [ shift and go to state 13 ]
-  ! MINUS           [ shift and go to state 14 ]
+    (2) expr -> LPAREN expr RPAREN .
+    DIVIDE          reduce using rule 2 (expr -> LPAREN expr RPAREN .)
+    TIMES           reduce using rule 2 (expr -> LPAREN expr RPAREN .)
+    MINUS           reduce using rule 2 (expr -> LPAREN expr RPAREN .)
+    PLUS            reduce using rule 2 (expr -> LPAREN expr RPAREN .)
+    $end            reduce using rule 2 (expr -> LPAREN expr RPAREN .)
+    RPAREN          reduce using rule 2 (expr -> LPAREN expr RPAREN .)
 
 
-state 23
+Conflicts:
 
-    (11) expression -> expression MINUS expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-
-    PLUS            reduce using rule 11 (expression -> expression MINUS expression .)
-    MINUS           reduce using rule 11 (expression -> expression MINUS expression .)
-    $end            reduce using rule 11 (expression -> expression MINUS expression .)
-    RPAREN          reduce using rule 11 (expression -> expression MINUS expression .)
-
-  ! PLUS            [ shift and go to state 13 ]
-  ! MINUS           [ shift and go to state 14 ]
-
-
-state 24
-
-    (12) expression -> literal TIMES literal .
-
-    PLUS            reduce using rule 12 (expression -> literal TIMES literal .)
-    MINUS           reduce using rule 12 (expression -> literal TIMES literal .)
-    $end            reduce using rule 12 (expression -> literal TIMES literal .)
-    RPAREN          reduce using rule 12 (expression -> literal TIMES literal .)
-
-
-state 25
-
-    (13) expression -> literal DIVIDE literal .
-
-    PLUS            reduce using rule 13 (expression -> literal DIVIDE literal .)
-    MINUS           reduce using rule 13 (expression -> literal DIVIDE literal .)
-    $end            reduce using rule 13 (expression -> literal DIVIDE literal .)
-    RPAREN          reduce using rule 13 (expression -> literal DIVIDE literal .)
-
-
-state 26
-
-    (54) expression -> LPAREN expression RPAREN .
-
-    PLUS            reduce using rule 54 (expression -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 54 (expression -> LPAREN expression RPAREN .)
-    $end            reduce using rule 54 (expression -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 54 (expression -> LPAREN expression RPAREN .)
-
-WARNING: 
-WARNING: Conflicts:
-WARNING: 
-WARNING: shift/reduce conflict for PLUS in state 17 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 17 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 18 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 18 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 19 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 19 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 20 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 20 resolved as shift
+reduce/reduce conflict in state 4 resolved using rule expr -> ID
+rejected rule (term -> ID) in state 4
+reduce/reduce conflict in state 16 resolved using rule expr -> term
+rejected rule (expr -> expr DIVIDE term  [precedence=left, level=4]) in state 16
+reduce/reduce conflict in state 17 resolved using rule expr -> ID
+rejected rule (term -> ID) in state 17
+Rule (term -> ID) is never reduced
+Rule (expr -> expr DIVIDE term  [precedence=left, level=4]) is never reduced

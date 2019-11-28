@@ -5,20 +5,19 @@ import copy
 class AnaliserLexer(Lexer):
 
     tokens = {
-        'ID', 'NAME', 'NUMBER', 'NORMALSTRING', 'PLUS', 'MINUS',
-        'TIMES', 'DIVIDE', 'ASSIGN', 'RPAREN', 'LPAREN',
-        'RCOLC', 'LCOLC', 'RBRACE', 'LBRACE', 'COMMA',
-        'COLON', 'EQUALS', 'DIFF', 'MENOR', 'MAIOR',
-        'MENOREQUALS', 'MAIOREQUALS', 'SUMEQUALS',
-        'MINUSEQUALS', 'TIMESEQUALS', 'DIVIDEEQUALS',
-        'WHITESPACE', 'EOF', 'BREAK', 'FOR', 'FALSE', 'IF', 'ELIF', 'ELSE',
-        'RETURN', 'TRUE', 'WHILE', 'PASS', 'DEF', 'CLASS', 'NONE', 'AND',
-        'CONTINUE', 'FROM', 'IMPORT', 'IN', 'NOT', 'OR'
+        ID, NAME, NUMBER, NORMALSTRING, PLUS, MINUS,
+        TIMES, DIVIDE, ASSIGN, RPAREN, LPAREN,
+        RCOLC, LCOLC, RBRACE, LBRACE,
+        COLON, EQUALS, DIFF, MENOR, MAIOR,
+        MENOREQUALS, MAIOREQUALS, SUMEQUALS,
+        MINUSEQUALS, TIMESEQUALS, DIVIDEEQUALS,
+        WHITESPACE, EOF, BREAK, FOR, FALSE, IF, ELIF, ELSE,
+        RETURN, TRUE, WHILE, PASS, DEF, CLASS, NONE, AND,
+        CONTINUE, FROM, IMPORT, IN, NOT, OR
     }
 
     ignore = ' \t'
 
-    
     PLUS = r'\+'
     MINUS = r'-'
     TIMES = r'\*'
@@ -29,7 +28,6 @@ class AnaliserLexer(Lexer):
     LCOLC = r'\['
     RBRACE = r'\}'
     LBRACE = r'\{'
-    COMMA = r','
     COLON = r':'
     EQUALS = r'=='
     DIFF = r'!='
@@ -42,14 +40,13 @@ class AnaliserLexer(Lexer):
     TIMESEQUALS = r'\*='
     DIVIDEEQUALS = r'/='
     ASSIGN = r'='
-    WHITESPACE = r'\s\s+'
     EOF = r'$\(?![\r\n]\)'
     ignore_comment = r'\#.*'
     ignore_newline = r'\n+'
 
-    IF = r'if'
-    ELSE = r'else'
-    WHILE = r'while'
+    # IF = r'if'
+    # ELSE = r'else'
+    # WHILE = r'while'
     FOR = r'for'
     BREAK = r'breack'
     FALSE = r'false'
@@ -68,6 +65,11 @@ class AnaliserLexer(Lexer):
     NOT = r'not'
     OR = r'or'
     ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
+
+    # Special cases
+    ID['if'] = IF
+    ID['else'] = ELSE
+    ID['while'] = WHILE
 
     def __init__(self, eoftoken='EOF', **kwargs):
 
@@ -104,26 +106,29 @@ class AnaliserLexer(Lexer):
         print("Illegal character '%s'" % t.value[0])
         self.index += 1
 
-    @_(r'[a-zA-Z_][a-zA-Z_0-9]*')
-    def NAME(self, t):
-        if t.value in RESERVED:  # Check for reserved words
-            t.type = RESERVED[t.value]
-        return t
-
     @_(r'\"([^\\\n]|(\\.))*?\"')
     def NORMALSTRING(self, t):
         # print(t)
         return t
 
-    # def COMMENT(self, t):
-    #     r'\#.*'
-    #     pass
+    @_(r'\s\s+')
+    def WHITESPACE(self, t):
+        whitespace = t.value
+        change = self.calc_indent(whitespace)
 
-    # def ccode_comment(self,   t):
-    #     r'(/\*(.|\n)*?\*/)|(//.*)'
-    #     pass
+        if change == 1:
+            t.type = 'INDENT'
 
-    # EOF handling rule
+        if change < 0:
+            # dedenting one or more times
+            change += 1
+            t.type = 'DEDENT'
+
+            # buffer any additional DEDENTs
+            while change:
+                self.tokens.append(copy.copy(t))
+                change += 1
+
     def eof(self, t):
         if t is None:
             return None
@@ -132,27 +137,8 @@ class AnaliserLexer(Lexer):
         # loop until we find a valid token
         import ipdb; ipdb.set_trace()
         for tok in self.tokenize(data):
-            change = 0
+
             self.tokens_result.append(tok)
-
-            if tok.type == 'WHITESPACE':
-                # check for new indent/dedent
-                whitespace = tok.value
-                change = self.calc_indent(whitespace)
-
-                if change == 1:
-                    tok.type = 'INDENT'
-
-                if change < 0:
-                    # dedenting one or more times
-                    change += 1
-                    tok.type = 'DEDENT'
-
-                    # buffer any additional DEDENTs
-                    while change:
-                        self.tokens.append(copy.copy(tok))
-                        change += 1
-
             print('type=%r, value=%r' % (tok.type, tok.value))
 
     def calc_indent(self, whitespace):
