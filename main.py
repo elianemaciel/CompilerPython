@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 
-# Autor 1: Eliane Isadora Faveron Maciel
-# Autora 2: Guilherme Menin Stedile
-from ply import lex, yacc
+# Autora 1: Eliane Isadora Faveron Maciel
+# Autor 2: Guilherme Menin Stedile
 from analisador_lexico import AnaliserLexer
 from grammar import MyParser
 
@@ -10,20 +9,19 @@ from grammar import MyParser
 if __name__ == '__main__':
 
     file_open = open("fonte.txt", "r")
-    data = file_open.read()
+    lexer = AnaliserLexer()
+    file_data = file_open.read()
+    lexer.tokenize_data(file_data)
+
+    lexer.transform_tokens()
+    file_open = open("Saida.txt", "w")
+    file_open.write("\n".join(lexer.tokens_result_str))
+    file_open.close()
+
+    file_open = open("fonte.txt", "r")
+    data = file_open.readlines()
     lexer = AnaliserLexer()
     parser = MyParser()
 
-    # lexer.tokenize_data(data)
-
-    result = parser.parse(lexer.tokenize(data))
-    print(result)
-    print(parser.names)
-    # parser = MyParser()
-    # parser.run(file_open.read())
-    # file_open.close()
-
-    # lexer.transform_tokens()
-    # file_open = open("Saida.txt", "w")
-    # file_open.write("\n".join(lexer.tokens_result_str))
-    # file_open.close()
+    for line in data:
+        result = parser.parse(lexer.tokenize(line))

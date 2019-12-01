@@ -4,8 +4,10 @@ from sly import Parser
 from exceptions_errors import SyntaxeError, SinalDesconhecido
 from analisador_lexico import AnaliserLexer
 
+
 class Expr:
     pass
+
 
 class BinOp(Expr):
     def __init__(self, op, left, right):
@@ -13,9 +15,18 @@ class BinOp(Expr):
         self.left = left
         self.right = right
 
+
+class AssingOp(Expr):
+    def __init__(self, op, left, right):
+        self.op = op
+        self.left = left
+        self.right = right
+
+
 class Number(Expr):
     def __init__(self, value):
-        self.value = value
+        self.value = int(value)
+
 
 class MyParser(Parser):
     tokens = AnaliserLexer.tokens
@@ -42,60 +53,91 @@ class MyParser(Parser):
     def statement(self, p):
         print(p.expr)
 
-    @_('expr PLUS expr')
-    def expr(self, p):
-        return BinOp(p[1], p.expr0, p.expr1)
-
-    @_('expr MINUS expr')
-    def expr(self, p):
-        return BinOp(p[1], p.expr0, p.expr1)
-
-    @_('expr TIMES expr')
-    def expr(self, p):
-        return BinOp(p[1], p.expr0, p.expr1)
-
-    @_('expr DIVIDE expr')
-    def expr(self, p):
-        if p.term == 0:
-            print("Can't divide by 0")
-            raise ZeroDivisionError('integer division by 0')
-        return BinOp(p[1], p.expr0, p.expr1)
-
-    @_('MINUS expr %prec UMINUS')
-    def expr(self, p):
-        return -p.expr
-
-    @_('LPAREN expr RPAREN')
-    def expr(self, p):
-        return p.expr
-
-    @_('ID SUMEQUALS NUMBER')
-    def sumequals(self, p):
-        return (p[1], p[2])
-
-    @_('ID MINUSEQUALS NUMBER')
-    def minusequals(self, p):
-        return (p[1], p[2])
-
-    @_('IF ID IN ID COLON expr')
-    def for_statement(self, p):
-        return p.expr1
-
-    # @_('IF expr')
-    # def if_expr(self, p):
-    #     return p[4]
-
-    # @_('expr OR expr')
-    # def expr(self, p):
-    #     return ('OR', p.expr0, p.expr1)
-
-    # @_('expr AND expr')
-    # def expr(self, p):
-    #     return ('AND', p.expr0, p.expr1)
-
     @_('NUMBER')
     def expr(self, p):
         return int(p.NUMBER)
+
+    @_('expr PLUS expr',
+        'expr MINUS expr',
+        'expr TIMES expr',
+        'expr DIVIDE expr')
+    def expr(self, p):
+        return BinOp(p[1], p.expr0, p.expr1)
+
+    @_('expr MENOR expr',
+        'expr MAIOR expr',
+        'expr MENOREQUALS expr',
+        'expr MAIOREQUALS expr')
+    def expr(self, p):
+        return BinOp(p[1], p.expr0, p.expr1)
+
+
+    @_('ID SUMEQUALS expr')
+    def sumequals(self, p):
+        try:
+            if self.names[p.ID]:
+                self.names[p.ID] += int(p.NUMBER)
+        except LookupError:
+            print("Undefined name '%s'" % p.ID)
+            return 0
+
+    @_('ID MINUSEQUALS expr')
+    def minusequals(self, p):
+        return (p[1], p[2])
+
+    @_('COLON')
+    def expr(self, p):
+        return p.COLON
+
+    @_('IF ID IN ID COLON expr')
+    def expr(self, p):
+        return p.expr
+
+    @_('IF expr COLON')
+    def expr(self, p):
+        return p
+
+    @_('IF ID COLON')
+    def expr(self, p):
+        return p
+
+    @_('FOR ID IN ID COLON')
+    def expr(self, p):
+        return p
+
+    @_('WHILE ID COLON',
+        'WHILE TRUE COLON')
+    def expr(self, p):
+        return p
+
+    @_('DEF ID factor COLON')
+    def expr(self, p):
+        return p
+
+    @_('CLASS ID factor COLON',
+        'CLASS ID COLON')
+    def expr(self, p):
+        return p
+
+    @_('PASS')
+    def expr(self, p):
+        return p.PASS
+
+    @_('expr OR expr')
+    def expr(self, p):
+        return ('OR', p.expr0, p.expr1)
+
+    @_('expr AND expr')
+    def expr(self, p):
+        return ('AND', p.expr0, p.expr1)
+
+    @_('factor')
+    def expr(self, p):
+        return p.factor
+
+    @_('LPAREN expr RPAREN')
+    def factor(self, p):
+        return p.expr
 
     @_('ID')
     def expr(self, p):
@@ -107,17 +149,14 @@ class MyParser(Parser):
 
     def error(self, p):
         if p:
-            # print(p)
             print("Syntax error at {0}, in line {1}, colum {2}".format(
                     p.type,
                     p.lineno,
                     p.index
                 )
             )
-            # Just discard the token and tell the parser it's okay.
             self.errok()
         else:
-            print("End of File!")
+            # print("End of File!")
             return
         self.restart()
-        # Return SEMI to the parser as the next lookahead token

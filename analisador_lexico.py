@@ -77,15 +77,9 @@ class AnaliserLexer(Lexer):
         self.eof = eoftoken
 
     def transform_tokens(self):
-
-        for token in self.tokens_result:
+        for tok in self.tokens_result:
             self.tokens_result_str.append(
-                "{0}, {1}, {2}, {3}".format(
-                    token.type,
-                    token.lineno,
-                    token.value,
-                    token.lexpos
-                )
+                'type=%r, value=%r' % (tok.type, tok.value)
             )
 
     @_(r'\d+')
@@ -107,35 +101,29 @@ class AnaliserLexer(Lexer):
         # print(t)
         return t
 
-    @_(r'\s\s+')
-    def WHITESPACE(self, t):
-        whitespace = t.value
-        change = self.calc_indent(whitespace)
-
-        if change == 1:
-            t.type = 'INDENT'
-
-        if change < 0:
-            # dedenting one or more times
-            change += 1
-            t.type = 'DEDENT'
-
-            # buffer any additional DEDENTs
-            while change:
-                self.tokens.append(copy.copy(t))
-                change += 1
-
-    def eof(self, t):
-        if t is None:
-            return None
-
     def tokenize_data(self, data):
         # loop until we find a valid token
-        import ipdb; ipdb.set_trace()
         for tok in self.tokenize(data):
-
+            change = 0
             self.tokens_result.append(tok)
-            print('type=%r, value=%r' % (tok.type, tok.value))
+
+            if tok.type == 'WHITESPACE':
+                # check for new indent/dedent
+                whitespace = tok.value
+                change = self.calc_indent(whitespace)
+
+                if change == 1:
+                    tok.type = 'INDENT'
+
+                if change < 0:
+                    # dedenting one or more times
+                    change += 1
+                    tok.type = 'DEDENT'
+
+                    # buffer any additional DEDENTs
+                    while change:
+                        self.tokens.append(copy.copy(tok))
+                        change += 1
 
     def calc_indent(self, whitespace):
         "returns a number representing indents added or removed"
