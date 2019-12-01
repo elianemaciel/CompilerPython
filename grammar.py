@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 
 from sly import Parser
-from exceptions_errors import SyntaxeError, SinalDesconhecido
 from analisador_lexico import AnaliserLexer
 
 
